@@ -183,7 +183,7 @@ function Footer() {
               <FooterTitle>Wilner Bruno</FooterTitle>
               <FooterText>
                 Desenvolvedor Back-end apaixonado por criar soluções robustas 
-                e APIs escaláveis para empresas inovadoras.
+                para empresas inovadoras.
               </FooterText>
               <SocialLinks>
                 {socialLinks.map((social, index) => (
