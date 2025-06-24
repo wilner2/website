@@ -8,13 +8,41 @@ const AboutSection = styled.section`
   display: flex;
   align-items: center;
   padding: 6rem 2rem;
-  background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+  position: relative;
+  overflow: hidden;
+`;
+
+// Grid tech de fundo
+const TechGrid = styled.div`
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: 
+    linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 80px 80px;
+  animation: gridFloat 25s linear infinite;
+  z-index: 1;
+  pointer-events: none;
+
+  @keyframes gridFloat {
+    0% {
+      transform: translate(0, 0) rotate(0deg);
+    }
+    100% {
+      transform: translate(80px, 80px) rotate(0.5deg);
+    }
+  }
 `;
 
 const Container = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   width: 100%;
+  position: relative;
+  z-index: 2;
 `;
 
 const SectionTitle = styled(motion.h2)`
@@ -22,10 +50,22 @@ const SectionTitle = styled(motion.h2)`
   font-weight: 700;
   text-align: center;
   margin-bottom: 1rem;
-  background: linear-gradient(45deg, #00d4ff, #ff6b6b);
+  background: linear-gradient(45deg, #00d4ff, #ff6b6b, #ff00ff, #00d4ff);
+  background-size: 300% 300%;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+  animation: titleGlow 4s ease-in-out infinite;
+  text-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+
+  @keyframes titleGlow {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
 `;
 
 const SectionSubtitle = styled(motion.p)`
@@ -36,6 +76,7 @@ const SectionSubtitle = styled(motion.p)`
   max-width: 600px;
   margin-left: auto;
   margin-right: auto;
+  text-shadow: 0 0 10px rgba(204, 204, 204, 0.2);
 `;
 
 const ContentGrid = styled.div`
@@ -62,11 +103,13 @@ const AboutText = styled(motion.p)`
   color: #cccccc;
   margin-bottom: 2rem;
   opacity: 0.9;
+  text-shadow: 0 0 5px rgba(204, 204, 204, 0.1);
 `;
 
 const HighlightText = styled.span`
   color: #00d4ff;
   font-weight: 600;
+  text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
 `;
 
 const StatsGrid = styled.div`
@@ -78,17 +121,35 @@ const StatsGrid = styled.div`
 `;
 
 const StatCard = styled(motion.div)`
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(0, 255, 255, 0.05);
+  border: 1px solid rgba(0, 255, 255, 0.2);
   border-radius: 15px;
   padding: 1.5rem;
   text-align: center;
   backdrop-filter: blur(10px);
-  transition: transform 0.3s ease;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.1), transparent);
+    transition: left 0.5s;
+  }
 
   &:hover {
     transform: translateY(-5px);
     border-color: #00d4ff;
+    box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
+
+    &::before {
+      left: 100%;
+    }
   }
 `;
 
@@ -96,6 +157,7 @@ const StatIcon = styled.div`
   font-size: 2rem;
   color: #00d4ff;
   margin-bottom: 1rem;
+  text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
 `;
 
 const StatNumber = styled.h3`
@@ -103,6 +165,7 @@ const StatNumber = styled.h3`
   font-weight: 700;
   color: white;
   margin-bottom: 0.5rem;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 `;
 
 const StatLabel = styled.p`
@@ -123,14 +186,15 @@ const VisualContent = styled.div`
 `;
 
 const ProfileCard = styled(motion.div)`
-  background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(255, 107, 107, 0.1));
+  background: linear-gradient(135deg, rgba(0, 212, 255, 0.1), rgba(255, 107, 107, 0.1), rgba(255, 0, 255, 0.1));
   border: 2px solid rgba(0, 212, 255, 0.3);
   border-radius: 20px;
   padding: 2rem;
   text-align: center;
-  backdrop-filter: blur(10px);
+  backdrop-filter: blur(15px);
   position: relative;
   overflow: hidden;
+  box-shadow: 0 10px 40px rgba(0, 212, 255, 0.1);
 
   &::before {
     content: '';
@@ -147,13 +211,19 @@ const ProfileCard = styled(motion.div)`
   &:hover::before {
     transform: translateX(100%);
   }
+
+  &:hover {
+    border-color: #00d4ff;
+    box-shadow: 0 15px 50px rgba(0, 212, 255, 0.2);
+  }
 `;
 
 const ProfileImage = styled.div`
   width: 120px;
   height: 120px;
   border-radius: 50%;
-  background: linear-gradient(45deg, #00d4ff, #ff6b6b);
+  background: linear-gradient(45deg, #00d4ff, #ff6b6b, #ff00ff);
+  background-size: 200% 200%;
   margin: 0 auto 1.5rem;
   display: flex;
   align-items: center;
@@ -161,6 +231,17 @@ const ProfileImage = styled.div`
   font-size: 3rem;
   color: white;
   font-weight: 700;
+  animation: profileGlow 3s ease-in-out infinite;
+  box-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+
+  @keyframes profileGlow {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
+    }
+  }
 `;
 
 const ProfileName = styled.h3`
@@ -168,12 +249,14 @@ const ProfileName = styled.h3`
   font-weight: 600;
   color: white;
   margin-bottom: 0.5rem;
+  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 `;
 
 const ProfileRole = styled.p`
   font-size: 1rem;
   color: #00d4ff;
   margin-bottom: 1rem;
+  text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
 `;
 
 const ProfileDescription = styled.p`
@@ -190,6 +273,7 @@ const FloatingElements = styled.div`
   right: 0;
   bottom: 0;
   pointer-events: none;
+  z-index: 1;
 `;
 
 const FloatingElement = styled(motion.div)`
@@ -198,7 +282,7 @@ const FloatingElement = styled(motion.div)`
   height: 6px;
   background: #00d4ff;
   border-radius: 50%;
-  opacity: 0.4;
+  box-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
 `;
 
 function About() {
@@ -219,6 +303,7 @@ function About() {
 
   return (
     <AboutSection id="sobre">
+      <TechGrid />
       <Container>
         <SectionTitle
           initial={{ opacity: 0, y: 30 }}
@@ -319,24 +404,24 @@ function About() {
               </ProfileDescription>
             </ProfileCard>
           </VisualContent>
-
-          <StatsGrid>
-            {stats.map((stat, index) => (
-              <StatCard
-                key={stat.label}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.6 + index * 0.1 }}
-                viewport={{ once: true }}
-                whileHover={{ scale: 1.05 }}
-              >
-                <StatIcon>{stat.icon}</StatIcon>
-                <StatNumber>{stat.number}</StatNumber>
-                <StatLabel>{stat.label}</StatLabel>
-              </StatCard>
-            ))}
-          </StatsGrid>
         </ContentGrid>
+
+        <StatsGrid>
+          {stats.map((stat, index) => (
+            <StatCard
+              key={stat.label}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 0.6 + index * 0.1 }}
+              viewport={{ once: true }}
+              whileHover={{ scale: 1.05 }}
+            >
+              <StatIcon>{stat.icon}</StatIcon>
+              <StatNumber>{stat.number}</StatNumber>
+              <StatLabel>{stat.label}</StatLabel>
+            </StatCard>
+          ))}
+        </StatsGrid>
       </Container>
     </AboutSection>
   );
