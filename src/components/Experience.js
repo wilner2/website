@@ -408,7 +408,7 @@ function Experience() {
           transition={{ duration: 0.8, delay: 0.2 }}
           viewport={{ once: true }}
         >
-          Minha jornada profissional com carteira de trabalho e os clientes que tive o prazer de atender
+          Minha jornada profissional e os clientes que tive o prazer de atender
         </SectionSubtitle>
 
         <Timeline>
