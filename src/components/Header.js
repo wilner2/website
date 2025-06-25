@@ -22,6 +22,17 @@ const Nav = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  min-height: 60px;
+  
+  @media (max-width: 768px) {
+    padding: 0.75rem 1rem;
+    min-height: 50px;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 0.5rem 1rem;
+    min-height: 45px;
+  }
 `;
 
 const Logo = styled(motion.h1)`
@@ -43,6 +54,14 @@ const Logo = styled(motion.h1)`
     50% {
       background-position: 100% 50%;
     }
+  }
+  
+  @media (max-width: 768px) {
+    font-size: 1.3rem;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 1.1rem;
   }
 `;
 

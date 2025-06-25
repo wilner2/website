@@ -11,6 +11,17 @@ const HeroSection = styled.section`
   position: relative;
   overflow: hidden;
   padding: 0 2rem;
+  padding-top: 80px;
+  
+  @media (max-width: 768px) {
+    padding-top: 70px;
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+  
+  @media (max-width: 480px) {
+    padding-top: 60px;
+  }
 `;
 
 const BackgroundGradient = styled.div`
@@ -72,6 +83,15 @@ const Content = styled.div`
   text-align: center;
   z-index: 2;
   position: relative;
+  padding-bottom: 4rem;
+  
+  @media (max-width: 768px) {
+    padding-bottom: 3rem;
+  }
+  
+  @media (max-width: 480px) {
+    padding-bottom: 2.5rem;
+  }
 `;
 
 const Greeting = styled(motion.h2)`
@@ -84,7 +104,7 @@ const Greeting = styled(motion.h2)`
 `;
 
 const Name = styled(motion.h1)`
-  font-size: clamp(3rem, 8vw, 6rem);
+  font-size: clamp(2.5rem, 6vw, 6rem);
   font-weight: 700;
   margin-bottom: 1rem;
   background: linear-gradient(45deg, #00d4ff, #ff6b6b, #00d4ff, #ff00ff);
@@ -95,15 +115,25 @@ const Name = styled(motion.h1)`
   animation: gradientShift 4s ease-in-out infinite;
   text-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
   position: relative;
+  
+  @media (max-width: 480px) {
+    font-size: clamp(2rem, 5vw, 3rem);
+    margin-bottom: 0.5rem;
+  }
 `;
 
 const Title = styled(motion.h2)`
-  font-size: clamp(1.5rem, 4vw, 2.5rem);
+  font-size: clamp(1.2rem, 3vw, 2.5rem);
   font-weight: 600;
   color: #ffffff;
   margin-bottom: 2rem;
   opacity: 0.9;
   text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
+  
+  @media (max-width: 480px) {
+    font-size: clamp(1rem, 2.5vw, 1.5rem);
+    margin-bottom: 1rem;
+  }
 `;
 
 const Description = styled(motion.p)`
@@ -114,6 +144,18 @@ const Description = styled(motion.p)`
   line-height: 1.6;
   opacity: 0.8;
   text-shadow: 0 0 5px rgba(204, 204, 204, 0.2);
+  
+  @media (max-width: 768px) {
+    font-size: 1rem;
+    margin-bottom: 2rem;
+    padding: 0 1rem;
+  }
+  
+  @media (max-width: 480px) {
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+    line-height: 1.5;
+  }
 `;
 
 const CTAButton = styled(motion.button)`
@@ -160,6 +202,18 @@ const CTAButton = styled(motion.button)`
       background-position: 100% 50%;
     }
   }
+  
+  @media (max-width: 768px) {
+    margin-bottom: 2rem;
+    padding: 0.8rem 1.5rem;
+    font-size: 1rem;
+  }
+  
+  @media (max-width: 480px) {
+    margin-bottom: 1.5rem;
+    padding: 0.7rem 1.2rem;
+    font-size: 0.9rem;
+  }
 `;
 
 const SocialLinks = styled(motion.div)`
@@ -167,6 +221,16 @@ const SocialLinks = styled(motion.div)`
   justify-content: center;
   gap: 1.5rem;
   margin-bottom: 3rem;
+  position: relative;
+  z-index: 20;
+  
+  @media (max-width: 768px) {
+    margin-bottom: 2rem;
+  }
+  
+  @media (max-width: 480px) {
+    margin-bottom: 1.5rem;
+  }
 `;
 
 const SocialLink = styled(motion.a)`
@@ -209,7 +273,7 @@ const SocialLink = styled(motion.a)`
 
 const ScrollIndicator = styled(motion.div)`
   position: absolute;
-  bottom: 2rem;
+  bottom: 1rem;
   left: 50%;
   transform: translateX(-50%);
   display: flex;
@@ -218,6 +282,15 @@ const ScrollIndicator = styled(motion.div)`
   gap: 0.5rem;
   color: #cccccc;
   cursor: pointer;
+  z-index: 10;
+  
+  @media (max-width: 768px) {
+    bottom: 0.5rem;
+  }
+  
+  @media (max-width: 480px) {
+    bottom: 0.25rem;
+  }
 `;
 
 const ScrollText = styled.span`

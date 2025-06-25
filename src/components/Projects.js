@@ -9,12 +9,27 @@ const ProjectsSection = styled.section`
   align-items: center;
   padding: 6rem 2rem;
   background: linear-gradient(135deg, #0f0f0f 0%, #1a1a1a 100%);
+  overflow: hidden;
+  
+  @media (max-width: 768px) {
+    padding: 4rem 1rem;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 3rem 0.5rem;
+  }
 `;
 
 const Container = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   width: 100%;
+  overflow: hidden;
+  padding: 0 1rem;
+  
+  @media (max-width: 768px) {
+    padding: 0 0.5rem;
+  }
 `;
 
 const SectionTitle = styled(motion.h2)`
@@ -64,8 +79,20 @@ const FilterButton = styled(motion.button)`
 
 const ProjectsGrid = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   gap: 2rem;
+  width: 100%;
+  overflow: hidden;
+  
+  @media (max-width: 768px) {
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+  }
+  
+  @media (max-width: 480px) {
+    grid-template-columns: 1fr;
+    gap: 1rem;
+  }
 `;
 
 const ProjectCard = styled(motion.div)`
@@ -75,11 +102,19 @@ const ProjectCard = styled(motion.div)`
   overflow: hidden;
   backdrop-filter: blur(10px);
   transition: all 0.3s ease;
+  width: 100%;
+  max-width: 100%;
 
   &:hover {
     border-color: #00d4ff;
     transform: translateY(-10px);
     box-shadow: 0 20px 40px rgba(0, 212, 255, 0.2);
+  }
+  
+  @media (max-width: 768px) {
+    &:hover {
+      transform: translateY(-5px);
+    }
   }
 `;
 
@@ -114,6 +149,14 @@ const ProjectImage = styled.div`
 
 const ProjectContent = styled.div`
   padding: 1.5rem;
+  
+  @media (max-width: 768px) {
+    padding: 1rem;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 0.8rem;
+  }
 `;
 
 const ProjectTitle = styled.h3`
@@ -151,6 +194,11 @@ const TechTag = styled.span`
 const ProjectLinks = styled.div`
   display: flex;
   gap: 1rem;
+  flex-wrap: wrap;
+  
+  @media (max-width: 480px) {
+    gap: 0.5rem;
+  }
 `;
 
 const ProjectLink = styled(motion.a)`
@@ -165,10 +213,22 @@ const ProjectLink = styled(motion.a)`
   font-weight: 500;
   text-decoration: none;
   transition: all 0.3s ease;
+  white-space: nowrap;
 
   &:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
+  }
+  
+  @media (max-width: 768px) {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.8rem;
+  }
+  
+  @media (max-width: 480px) {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.75rem;
+    gap: 0.3rem;
   }
 `;
 
