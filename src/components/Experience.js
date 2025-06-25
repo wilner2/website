@@ -363,7 +363,7 @@ function Experience() {
         { name: "MPMG", type: "Aplicações Full-Stack" },
         { name: "Projetos Internos", type: "Infraestrutura" },
       ],
-      technologies: ["Node.js", "React", "AWS", "Bancos de Dados Relacionais", "KVM","Druid","Elasticsearch","KVM","CI/CD"]
+      technologies: ["Node.js", "React", "AWS", "Bancos de Dados Relacionais","Druid","Elasticsearch","KVM","CI/CD"]
     }
   ];
 
