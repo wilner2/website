@@ -500,7 +500,7 @@ function Hero() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.6 }}
         >
-         Sou desenvolvedor back-end com mais de 5 anos de experiência criando soluções robustas, escaláveis e focadas no negócio. Atuo com Node.js e TypeScript, desenvolvendo desde microsserviços até monolitos modulares bem organizados. Tenho experiência com integração entre sistemas, mensageria, arquitetura orientada a eventos, bancos de dados relacionais e NoSQL, além de práticas DevOps e cloud.
+         Sou desenvolvedor back-end com mais de 5 anos de experiência criando soluções robustas, escaláveis e focadas no negócio. Atuo com Node.js e TypeScript, desenvolvendo desde microsserviços até monolitos. Tenho experiência com integração entre sistemas, mensageria, arquitetura orientada a eventos, bancos de dados relacionais e NoSQL, além de práticas DevOps e cloud.
 
         </Description>
 

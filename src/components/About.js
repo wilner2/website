@@ -288,9 +288,9 @@ const FloatingElement = styled(motion.div)`
 function About() {
   const stats = [
     { icon: <FiCode />, number: "5+", label: "Anos de Experiência" },
-    { icon: <FiTrendingUp />, number: "50+", label: "Projetos Concluídos" },
-    { icon: <FiUsers />, number: "20+", label: "Clientes Satisfeitos" },
-    { icon: <FiAward />, number: "15+", label: "Certificações" }
+    { icon: <FiTrendingUp />, number: "20+", label: "Projetos Concluídos" },
+    { icon: <FiUsers />, number: "10+", label: "Clientes Satisfeitos" },
+    { icon: <FiAward />, number: "10+", label: "Certificações" }
   ];
 
   const floatingElements = Array.from({ length: 8 }, (_, i) => ({

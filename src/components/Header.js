@@ -194,7 +194,7 @@ const CloseButton = styled.button`
   }
 `;
 
-const navItems = ['Início', 'Sobre', 'Habilidades', 'Projetos', 'Contato'];
+const navItems = ['Início', 'Sobre', 'Experiência', 'Habilidades', 'Projetos', 'Contato'];
 
 function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
