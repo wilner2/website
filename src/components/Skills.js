@@ -271,22 +271,22 @@ const skillCategories = [
   {
     title: "Backend",
     icon: <FiServer />,
-    skills: ["Node.js", "TypeScript", "Express", "REST", "GraphQL", "Microserviços","NestJS"]
+    skills: ["Node.js", "TypeScript", "Express", "REST", "GraphQL", "Microserviços","NestJS","Jest", "OAuth"]
   },
   {
     title: "Database",
     icon: <FiDatabase />,
-    skills: ["MongoDB", "PostgreSQL", "MySQL", "Redis", , "Prisma", "DynamoDB"]
+    skills: ["MongoDB", "PostgreSQL", "MySQL", "Redis", "Prisma", "DynamoDB", "TypeORM"]
   },
   {
     title: "Cloud & DevOps",
     icon: <FiCloud />,
-    skills: ["AWS", "Docker", "Kubernetes", "CI/CD", "Git", "GitHub Actions", "Azure"]
+    skills: ["AWS", "Docker", "Kubernetes", "CI/CD", "Git", "GitHub Actions", "Azure", "Filas", "LocalStack"]
   },
   {
     title: "Tools & Others",
     icon: <FiLayers />,
-    skills: [ "Postman", "Jest", "Cypress", "Webpack","SOLID","CleanCode","DDD","Swagger"]
+    skills: [ "Postman", "Cypress", "Webpack","SOLID","CleanCode","DDD","Swagger", "Clean Architecture", "TDD", "OpenTelemetry","Swagger", "Compodoc"]
   }
 ];
 
