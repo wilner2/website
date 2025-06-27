@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
-import { FiMenu, FiX } from 'react-icons/fi';
+import { FiMenu, FiX, FiHome, FiUser, FiBriefcase, FiCode, FiFolder, FiMail } from 'react-icons/fi';
 
 const HeaderContainer = styled(motion.header)`
   position: fixed;
@@ -46,6 +46,36 @@ const Logo = styled(motion.h1)`
   cursor: pointer;
   animation: logoGlow 4s ease-in-out infinite;
   text-shadow: 0 0 20px rgba(0, 212, 255, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+
+  svg {
+    font-size: 1.3rem;
+    background: linear-gradient(45deg, #00d4ff, #ff6b6b, #ff00ff, #00d4ff);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
+    animation: logoGlow 4s ease-in-out infinite, codeIconPulse 2s ease-in-out infinite;
+    filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.4));
+    position: relative;
+  }
+
+  svg::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #00d4ff, #ff6b6b, #ff00ff);
+    border-radius: 50%;
+    z-index: -1;
+    opacity: 0;
+    animation: codeIconGlow 3s ease-in-out infinite;
+  }
 
   @keyframes logoGlow {
     0%, 100% {
@@ -55,13 +85,39 @@ const Logo = styled(motion.h1)`
       background-position: 100% 50%;
     }
   }
+
+  @keyframes codeIconPulse {
+    0%, 100% {
+      transform: scale(1);
+    }
+    50% {
+      transform: scale(1.1);
+    }
+  }
+
+  @keyframes codeIconGlow {
+    0%, 100% {
+      opacity: 0;
+      transform: scale(1);
+    }
+    50% {
+      opacity: 0.3;
+      transform: scale(1.2);
+    }
+  }
   
   @media (max-width: 768px) {
     font-size: 1.3rem;
+    svg {
+      font-size: 1.1rem;
+    }
   }
   
   @media (max-width: 480px) {
     font-size: 1.1rem;
+    svg {
+      font-size: 1rem;
+    }
   }
 `;
 
@@ -82,26 +138,59 @@ const NavLink = styled(motion.li)`
   position: relative;
   padding: 0.5rem 1rem;
   border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  background: linear-gradient(45deg, rgba(0, 212, 255, 0.1), rgba(255, 107, 107, 0.1), rgba(255, 0, 255, 0.1));
+  background-size: 300% 300%;
+  animation: navGlow 4s ease-in-out infinite;
+
+  svg {
+    font-size: 1.1rem;
+    transition: all 0.3s ease;
+    background: linear-gradient(45deg, #00d4ff, #ff6b6b, #ff00ff, #00d4ff);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: navGlow 4s ease-in-out infinite;
+  }
 
   &::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: linear-gradient(45deg, rgba(0, 255, 255, 0.1), rgba(255, 107, 107, 0.1));
-    border-radius: 8px;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #00d4ff, #ff6b6b, #ff00ff);
+    border-radius: 10px;
+    z-index: -1;
     opacity: 0;
-    transition: opacity 0.3s ease;
+    animation: navGlow 3s ease-in-out infinite;
   }
 
   &:hover {
     color: #00d4ff;
     text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
+    transform: scale(1.05);
+
+    svg {
+      transform: scale(1.1);
+      filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.6));
+    }
 
     &::before {
-      opacity: 1;
+      opacity: 0.3;
+    }
+  }
+
+  @keyframes navGlow {
+    0%, 100% {
+      background-position: 0% 50%;
+    }
+    50% {
+      background-position: 100% 50%;
     }
   }
 `;
@@ -151,25 +240,50 @@ const MobileNavLink = styled(motion.h2)`
   border-radius: 12px;
   position: relative;
   overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: linear-gradient(45deg, rgba(0, 212, 255, 0.1), rgba(255, 107, 107, 0.1), rgba(255, 0, 255, 0.1));
+  background-size: 300% 300%;
+  animation: navGlow 4s ease-in-out infinite;
+
+  svg {
+    font-size: 1.8rem;
+    transition: all 0.3s ease;
+    background: linear-gradient(45deg, #00d4ff, #ff6b6b, #ff00ff, #00d4ff);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    animation: navGlow 4s ease-in-out infinite;
+  }
 
   &::before {
     content: '';
     position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.2), transparent);
-    transition: left 0.5s;
+    top: -2px;
+    left: -2px;
+    right: -2px;
+    bottom: -2px;
+    background: linear-gradient(45deg, #00d4ff, #ff6b6b, #ff00ff);
+    border-radius: 14px;
+    z-index: -1;
+    opacity: 0;
+    animation: navGlow 3s ease-in-out infinite;
   }
 
   &:hover {
     color: #00d4ff;
     text-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
-    background: rgba(0, 255, 255, 0.1);
+    transform: scale(1.05);
+
+    svg {
+      transform: scale(1.1);
+      filter: drop-shadow(0 0 8px rgba(0, 212, 255, 0.6));
+    }
 
     &::before {
-      left: 100%;
+      opacity: 0.3;
     }
   }
 `;
@@ -195,6 +309,15 @@ const CloseButton = styled.button`
 `;
 
 const navItems = ['Início', 'Sobre', 'Experiência', 'Habilidades', 'Projetos', 'Contato'];
+
+const navIcons = {
+  'Início': <FiHome />,
+  'Sobre': <FiUser />,
+  'Experiência': <FiBriefcase />,
+  'Habilidades': <FiCode />,
+  'Projetos': <FiFolder />,
+  'Contato': <FiMail />
+};
 
 function Header() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -241,7 +364,8 @@ function Header() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            Wilner Bruno
+            <FiCode />
+            {'Wilner Bruno'}
           </Logo>
 
           <NavLinks>
@@ -255,6 +379,7 @@ function Header() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
+                {navIcons[item]}
                 {item}
               </NavLink>
             ))}
@@ -285,6 +410,7 @@ function Header() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
               >
+                {navIcons[item]}
                 {item}
               </MobileNavLink>
             ))}
