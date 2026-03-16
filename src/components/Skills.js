@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { FiCode, FiDatabase, FiCloud, FiServer, FiLayers, FiCpu } from 'react-icons/fi';
+import React, { useState, useRef } from 'react';
+import { FiDatabase, FiCloud, FiServer, FiCpu } from 'react-icons/fi';
 import { cn } from '../lib/utils';
 import { useLanguage } from './ui/language-provider';
 
