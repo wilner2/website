@@ -1,0 +1,111 @@
+Contato
+31 998107159 (Mobile)
+wilner_brum@hotmail.com
+www.linkedin.com/in/wilner-bruno-
+arcanjo-660b60106 (LinkedIn)
+medium.com/@wilnerbruno
+(Portfolio)
+Principais competências
+Desenvolvimento de back-end
+Arquitetura de sistema
+solid
+Languages
+Ingles (Limited Working)
+Português
+Certifications
+Desenvolvimento Full Stack, Front-
+End, Mobile e Arquitetura de
+software
+Dev Ops & SRE Speedy
+NodeJs, Typescript, TDD, DDD,
+Clean Architecture e SOLID
+DEVOPSBOOTCAMPLIVE –
+DEVOPSBOOTCAM
+AWS Certified Cloud Practitioner
+Wilner Bruno Arcanjo
+Desenvolvedor Back-End Sênior| Node.js, NestJS, TypeScript | AWS
+Certified
+Belo Horizonte, Minas Gerais, Brasil
+Resumo
+Sou desenvolvedor back-end com 5 anos de experiência,
+apaixonado por criar soluções robustas, escaláveis e alinhadas aos
+objetivos do negócio. Atuo com Node.js, NestJS e TypeScript, e
+tenho sólida vivência em ambientes de nuvem como AWS, Azure e
+GCP.
+Minha abordagem combina domínio técnico com visão estratégica:
+participo desde a análise de requisitos até a definição de arquitetura,
+desenvolvimento, testes automatizados e integração de sistemas.
+Já fui responsável técnico em projetos desafiadores, entregando
+ganhos reais de performance e qualidade.
+Gosto de atuar em equipes colaborativas, compartilhando
+conhecimento e contribuindo para a melhoria contínua dos
+processos. Sou certificado AWS Cloud Practitioner e aplico boas
+práticas como TDD, DDD, Clean Architecture e SOLID para garantir
+soluções bem estruturadas e sustentáveis.
+Experiência
+Sem Parar
+Software Engineer
+março de 2026 - Present (1 mês)
+Brasil
+-Desenvolver micro serviços independentes que resolvem problemas de
+domínio específico
+-Responsável por todo ciclo de vida do desenvolvimento de código, indo
+do planejamento junto com o time de produto (pré código) até o deploy em
+produção e acompanhamento dos seus impactos (pós código).
+-Resolver problemas e contribuir com os desafios do time de tecnologia e de
+produto, compartilhando ideias, soluções, códigos, arquiteturas, etc.
+Page 1 of 3
+-Aprimorar a experiência do desenvolvimento de software na Gringo,
+considerando ferramentas, cobertura de testes, estrutura de códigos, etc.
+-Participar ativamente de discussões e decisões voltadas para design de
+software. Tomando a frente e ajudando a criar documentação.
+-Criar soluções escaláveis, sustentáveis e focadas no usuário. Nós usamos
+tecnologias como Node.js, Python, React Native, Flutter, PostgreSQL. Você
+não precisa conhece-las, mas estar aberto a aprendê-las.
+-Ajudar a organizar a arquitetura de software para orquestrar harmonicamente
+nossa arquitetura de serviços.
+LWSA
+Desenvolvedor Back-End Sênior
+maio de 2024 - março de 2026 (1 ano 11 meses)
+Pelotas, Rio Grande do Sul, Brasil
+Atuo como desenvolvedor back-end com foco em performance, escalabilidade
+e qualidade de código, utilizando tecnologias como Node.js, NestJS,
+TypeScript, PHP, AWS e Jest. Sou referência técnica no time, apoiando
+decisões de arquitetura, revisão de código e definição de boas práticas. Além
+do desenvolvimento, participo da análise de requisitos e da construção de
+soluções alinhadas com os objetivos do negócio. Contribuo na criação de
+documentações técnicas e na estruturação de sistemas observáveis com
+DataDog, sempre com foco em eficiência e entregas de alto impacto.
+Grupo GFT
+Desenvolvedor Back-End Pleno
+abril de 2022 - março de 2024 (2 anos)
+Trabalhei em projetos de grande porte utilizando Node.js, NestJS e
+plataformas de nuvem como AWS, GCP e Azure. Fui responsável pela análise
+de requisitos, definição de arquitetura e desenvolvimento de integrações
+entre sistemas, garantindo segurança, desempenho e alta disponibilidade.
+Atuei no monitoramento e otimização de aplicações críticas, com foco na
+eficiência operacional e experiência do usuário. A colaboração com times
+multidisciplinares era parte essencial do meu dia a dia.
+Semantix
+Desenvolvedor Back-End Pleno
+Page 2 of 3
+agosto de 2021 - abril de 2022 (9 meses)
+Desenvolvimento de sistemas back-end utilizando Node.js, com foco na
+integração de sistemas e serviços.
+Colaboração em projetos para garantir a comunicação eficiente e segura entre
+plataformas.
+Proposição de soluções eficazes e entrega de sistemas escaláveis e robustos.
+4mti
+Desenvolvedor FullStack Junior
+fevereiro de 2020 - agosto de 2021 (1 ano 7 meses)
+Belo Horizonte
+Desenvolvimento de aplicações full-stack com Node.js (back-end) e React
+(front-end).
+Gestão de infraestrutura na AWS, garantindo escalabilidade e disponibilidade
+dos sistemas.
+Solução que resultou em 60% de aumento na velocidade de consultas dos
+robôs.
+Formação acadêmica
+Centro Universitário Una
+Tecnólogo, Tecnologia da Informação · (2018 - 2020)
+Page 3 of 3
