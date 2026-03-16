@@ -1,397 +1,150 @@
-import React from 'react';
-import styled from 'styled-components';
-import { motion } from 'framer-motion';
-import { 
-  FiCode, 
-  FiDatabase, 
-  FiCloud, 
-  FiServer,
-  FiLayers
-} from 'react-icons/fi';
+import React, { useState, useRef, useEffect } from 'react';
+import { FiCode, FiDatabase, FiCloud, FiServer, FiLayers, FiCpu } from 'react-icons/fi';
+import { cn } from '../lib/utils';
+import { useLanguage } from './ui/language-provider';
 
-const SkillsSection = styled.section`
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  padding: 6rem 2rem;
-  position: relative;
-  overflow: hidden;
-`;
+// Simple Badge component
+const SkillBadge = ({ children, className }) => (
+  <span className={cn(
+    "inline-flex items-center rounded-md border border-border bg-secondary px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 text-secondary-foreground hover:bg-secondary/80",
+    className
+  )}>
+    {children}
+  </span>
+);
 
-// Grid tech de fundo
-const TechGrid = styled.div`
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background-image: 
-    linear-gradient(rgba(0, 255, 255, 0.05) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(0, 255, 255, 0.05) 1px, transparent 1px);
-  background-size: 80px 80px;
-  animation: gridFloat 25s linear infinite;
-  z-index: 1;
-  pointer-events: none;
 
-  @keyframes gridFloat {
-    0% {
-      transform: translate(0, 0) rotate(0deg);
-    }
-    100% {
-      transform: translate(80px, 80px) rotate(0.5deg);
-    }
-  }
-`;
 
-const Container = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
-  width: 100%;
-  position: relative;
-  z-index: 2;
-`;
+const SpotlightCard = ({ children, className = "" }) => {
+  const divRef = useRef(null);
+  const [position, setPosition] = useState({ x: 0, y: 0 });
+  const [opacity, setOpacity] = useState(0);
 
-const SectionTitle = styled(motion.h2)`
-  font-size: clamp(2rem, 5vw, 3rem);
-  font-weight: 700;
-  text-align: center;
-  margin-bottom: 1rem;
-  background: linear-gradient(45deg, #00d4ff, #ff6b6b, #ff00ff, #00d4ff);
-  background-size: 300% 300%;
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  animation: titleGlow 4s ease-in-out infinite;
-  text-shadow: 0 0 30px rgba(0, 212, 255, 0.3);
+  const handleMouseMove = (e) => {
+    if (!divRef.current) return;
 
-  @keyframes titleGlow {
-    0%, 100% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-  }
-`;
+    const div = divRef.current;
+    const rect = div.getBoundingClientRect();
 
-const SectionSubtitle = styled(motion.p)`
-  font-size: 1.2rem;
-  text-align: center;
-  color: #cccccc;
-  margin-bottom: 4rem;
-  max-width: 600px;
-  margin-left: auto;
-  margin-right: auto;
-  text-shadow: 0 0 10px rgba(204, 204, 204, 0.2);
-`;
+    setPosition({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+  };
 
-const SkillsGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 2rem;
-  margin-bottom: 4rem;
+  const handleMouseEnter = () => {
+    setOpacity(1);
+  };
 
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-  }
-`;
+  const handleMouseLeave = () => {
+    setOpacity(0);
+  };
 
-const SkillCategory = styled(motion.div)`
-  background: rgba(0, 255, 255, 0.05);
-  border: 1px solid rgba(0, 255, 255, 0.2);
-  border-radius: 20px;
-  padding: 2rem;
-  backdrop-filter: blur(15px);
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(0, 255, 255, 0.1), transparent);
-    transition: left 0.5s;
-  }
-
-  &:hover {
-    border-color: #00d4ff;
-    transform: translateY(-5px);
-    box-shadow: 0 15px 40px rgba(0, 212, 255, 0.2);
-
-    &::before {
-      left: 100%;
-    }
-  }
-`;
-
-const CategoryHeader = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-`;
-
-const CategoryIcon = styled.div`
-  font-size: 2rem;
-  color: #00d4ff;
-  text-shadow: 0 0 15px rgba(0, 212, 255, 0.5);
-`;
-
-const CategoryTitle = styled.h3`
-  font-size: 1.5rem;
-  font-weight: 600;
-  color: white;
-  text-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
-`;
-
-const SkillsList = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.8rem;
-`;
-
-const SkillItem = styled(motion.div)`
-  background: linear-gradient(45deg, rgba(0, 212, 255, 0.1), rgba(255, 107, 107, 0.1), rgba(255, 0, 255, 0.1));
-  border: 1px solid rgba(0, 212, 255, 0.3);
-  border-radius: 25px;
-  padding: 0.5rem 1rem;
-  font-size: 0.9rem;
-  color: white;
-  font-weight: 500;
-  transition: all 0.3s ease;
-  position: relative;
-  overflow: hidden;
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: -100%;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-    transition: left 0.3s;
-  }
-
-  &:hover {
-    background: linear-gradient(45deg, rgba(0, 212, 255, 0.2), rgba(255, 107, 107, 0.2), rgba(255, 0, 255, 0.2));
-    transform: scale(1.05);
-    box-shadow: 0 5px 15px rgba(0, 212, 255, 0.3);
-
-    &::before {
-      left: 100%;
-    }
-  }
-`;
-
-const ProgressSection = styled.div`
-  margin-top: 4rem;
-`;
-
-const ProgressTitle = styled(motion.h3)`
-  font-size: 2rem;
-  font-weight: 600;
-  text-align: center;
-  color: white;
-  margin-bottom: 3rem;
-  text-shadow: 0 0 15px rgba(255, 255, 255, 0.3);
-`;
-
-const ProgressGrid = styled.div`
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 2rem;
-`;
-
-const ProgressCard = styled(motion.div)`
-  background: rgba(0, 255, 255, 0.05);
-  border: 1px solid rgba(0, 255, 255, 0.2);
-  border-radius: 15px;
-  padding: 1.5rem;
-  backdrop-filter: blur(15px);
-  transition: all 0.3s ease;
-
-  &:hover {
-    border-color: #00d4ff;
-    box-shadow: 0 10px 30px rgba(0, 212, 255, 0.2);
-  }
-`;
-
-const ProgressHeader = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-`;
-
-const ProgressName = styled.h4`
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: white;
-  text-shadow: 0 0 5px rgba(255, 255, 255, 0.3);
-`;
-
-const ProgressPercentage = styled.span`
-  font-size: 0.9rem;
-  color: #00d4ff;
-  font-weight: 600;
-  text-shadow: 0 0 10px rgba(0, 212, 255, 0.5);
-`;
-
-const ProgressBar = styled.div`
-  width: 100%;
-  height: 8px;
-  background: rgba(0, 255, 255, 0.1);
-  border-radius: 4px;
-  overflow: hidden;
-`;
-
-const ProgressFill = styled(motion.div)`
-  height: 100%;
-  background: linear-gradient(45deg, #00d4ff, #ff6b6b, #ff00ff);
-  background-size: 200% 200%;
-  border-radius: 4px;
-  animation: progressGlow 3s ease-in-out infinite;
-
-  @keyframes progressGlow {
-    0%, 100% {
-      background-position: 0% 50%;
-    }
-    50% {
-      background-position: 100% 50%;
-    }
-  }
-`;
-
-const skillCategories = [
-  {
-    title: "Backend",
-    icon: <FiServer />,
-    skills: ["Node.js", "TypeScript", "Express", "REST", "GraphQL", "Microserviços","NestJS","Jest", "OAuth"]
-  },
-  {
-    title: "Database",
-    icon: <FiDatabase />,
-    skills: ["MongoDB", "PostgreSQL", "MySQL", "Redis", "Prisma", "DynamoDB", "TypeORM"]
-  },
-  {
-    title: "Cloud & DevOps",
-    icon: <FiCloud />,
-    skills: ["AWS", "Docker", "Kubernetes", "CI/CD", "Git", "GitHub Actions", "Azure", "Filas", "LocalStack"]
-  },
-  {
-    title: "Tools & Others",
-    icon: <FiLayers />,
-    skills: [ "Postman", "Cypress", "Webpack","SOLID","CleanCode","DDD","Swagger", "Clean Architecture", "TDD", "OpenTelemetry","Swagger", "Compodoc"]
-  }
-];
-
-const progressData = [
-  { name: "Node.js/TypeScript", percentage: 95 },
-  { name: "MongoDB/PostgreSQL", percentage: 90 },
-  { name: "REST APIs/GraphQL", percentage: 92 },
-  { name: "NestJS", percentage: 90 },
-  { name: "AWS/Docker", percentage: 88 },
-];
-
-function Skills() {
   return (
-    <SkillsSection id="habilidades">
-      <TechGrid />
-      <Container>
-        <SectionTitle
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8 }}
-          viewport={{ once: true }}
-        >
-          Habilidades
-        </SectionTitle>
-
-        <SectionSubtitle
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.8, delay: 0.2 }}
-          viewport={{ once: true }}
-        >
-          Tecnologias e ferramentas que utilizo no desenvolvimento
-        </SectionSubtitle>
-
-        <SkillsGrid>
-          {skillCategories.map((category, index) => (
-            <SkillCategory
-              key={category.title}
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 0.3 + index * 0.1 }}
-              viewport={{ once: true }}
-              whileHover={{ scale: 1.02 }}
-            >
-              <CategoryHeader>
-                <CategoryIcon>{category.icon}</CategoryIcon>
-                <CategoryTitle>{category.title}</CategoryTitle>
-              </CategoryHeader>
-              <SkillsList>
-                {category.skills.map((skill, skillIndex) => (
-                  <SkillItem
-                    key={skill}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ duration: 0.5, delay: 0.4 + index * 0.1 + skillIndex * 0.05 }}
-                    viewport={{ once: true }}
-                    whileHover={{ scale: 1.1 }}
-                  >
-                    {skill}
-                  </SkillItem>
-                ))}
-              </SkillsList>
-            </SkillCategory>
-          ))}
-        </SkillsGrid>
-
-        <ProgressSection>
-          <ProgressTitle
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.5 }}
-            viewport={{ once: true }}
-          >
-            Nível de Proficiência
-          </ProgressTitle>
-
-          <ProgressGrid>
-            {progressData.map((item, index) => (
-              <ProgressCard
-                key={item.name}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.8, delay: 0.6 + index * 0.1 }}
-                viewport={{ once: true }}
-                whileHover={{ scale: 1.02 }}
-              >
-                <ProgressHeader>
-                  <ProgressName>{item.name}</ProgressName>
-                  <ProgressPercentage>{item.percentage}%</ProgressPercentage>
-                </ProgressHeader>
-                <ProgressBar>
-                  <ProgressFill
-                    initial={{ width: 0 }}
-                    whileInView={{ width: `${item.percentage}%` }}
-                    transition={{ duration: 1, delay: 0.8 + index * 0.1 }}
-                    viewport={{ once: true }}
-                  />
-                </ProgressBar>
-              </ProgressCard>
-            ))}
-          </ProgressGrid>
-        </ProgressSection>
-      </Container>
-    </SkillsSection>
+    <div
+      ref={divRef}
+      onMouseMove={handleMouseMove}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      className={cn(
+        "relative overflow-hidden rounded-xl border border-border bg-card text-card-foreground shadow-sm transition-all duration-300 hover:shadow-md",
+        className
+      )}
+    >
+      <div
+        className="pointer-events-none absolute -inset-px opacity-0 transition duration-300 z-10"
+        style={{
+          opacity,
+          background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(var(--foreground), 0.05), transparent 40%)`,
+        }}
+        aria-hidden="true"
+      />
+      <div className="relative h-full z-20">{children}</div>
+    </div>
   );
-}
+};
 
-export default Skills; 
+const Skills = () => {
+  const { content } = useLanguage();
+  const { skills } = content;
+
+  // Re-construct the skills array using the translated content
+  const skillsData = [
+    {
+      category: skills.categories.backend,
+      icon: <FiServer className="h-6 w-6" />,
+      description: skills.categories.backendDesc,
+      items: ['Node.js', 'NestJS', 'TypeScript', 'PHP', 'Python', 'REST', 'GraphQL'],
+    },
+    {
+      category: skills.categories.cloud,
+      icon: <FiCloud className="h-6 w-6" />,
+      description: skills.categories.cloudDesc,
+      items: ['AWS (Certified)', 'Azure', 'GCP', 'Docker', 'Kubernetes', 'CI/CD Pipelines'],
+    },
+    {
+      category: skills.categories.arch,
+      icon: <FiCpu className="h-6 w-6" />,
+      description: skills.categories.archDesc,
+      items: ['SOLID', 'Clean Architecture', 'DDD', 'TDD', 'Jest', 'Microservices'],
+    },
+    {
+      category: skills.categories.frontend,
+      icon: <FiDatabase className="h-6 w-6" />,
+      description: skills.categories.frontendDesc,
+      items: ['PostgreSQL', 'MySQL', 'MongoDB', 'React', 'React Native', 'Flutter'],
+    },
+  ];
+
+  return (
+    <section id="skills" className="py-24 md:py-32 bg-background relative overflow-hidden border-t border-border/40 transition-colors duration-300">
+      {/* Background Decorative Element - Masked Grid with distinct style */}
+      <div className="absolute inset-0 -z-10 h-full w-full bg-background bg-[radial-gradient(#e5e7eb_1px,transparent_1px)] dark:bg-[radial-gradient(#ffffff1a_1px,transparent_1px)] [background-size:16px_16px] [mask-image:radial-gradient(ellipse_50%_50%_at_50%_50%,#000_70%,transparent_100%)]"></div>
+      <div className="absolute h-full w-full bg-[linear-gradient(to_right,#f0f0f0_1px,transparent_1px),linear-gradient(to_bottom,#f0f0f0_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#ffffff0a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff0a_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-50"></div>
+
+      <div className="container px-4 md:px-6 mx-auto relative z-10">
+        <div className="flex flex-col items-center justify-center space-y-4 text-center mb-16">
+          <div className="inline-flex items-center rounded-lg bg-muted px-3 py-1 text-sm font-medium">
+            <FiCpu className="mr-2 h-4 w-4" />
+            {skills.title}
+          </div>
+          <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-foreground">
+            {skills.mainTitle}
+          </h2>
+          <p className="mx-auto max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+            {skills.subtitle}
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
+          {skillsData.map((skill, index) => (
+            <SpotlightCard key={index} className="h-full group">
+              <div className="p-8 flex flex-col h-full bg-card/50 backdrop-blur-sm">
+                <div className="flex items-center justify-between mb-6">
+                  <div className="p-3 bg-secondary/50 rounded-lg border border-border/50 group-hover:border-primary/20 transition-colors">
+                    <span className="text-primary">{skill.icon}</span>
+                  </div>
+                  <span className="text-xs font-mono text-muted-foreground uppercase tracking-widest">0{index + 1}</span>
+                </div>
+
+                <h3 className="text-2xl font-bold mb-2 tracking-tight group-hover:text-primary transition-colors">{skill.category}</h3>
+                <p className="text-muted-foreground text-sm mb-6 flex-grow">
+                  {skill.description}
+                </p>
+
+                <div className="border-t border-border pt-6 mt-auto">
+                  <div className="flex flex-wrap gap-2">
+                    {skill.items.map((item, itemIndex) => (
+                      <SkillBadge key={itemIndex} className="bg-secondary/50 hover:bg-secondary">
+                        {item}
+                      </SkillBadge>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </SpotlightCard>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default Skills;
