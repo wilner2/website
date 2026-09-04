@@ -2,26 +2,19 @@ import React from 'react';
 import { FiAward, FiBook, FiCheckCircle } from 'react-icons/fi';
 import { useLanguage } from './ui/language-provider';
 
-// Map icons to types for dynamic rendering based on translation
+// Map icons by a language-independent key so new translations never break the icon.
 const iconMap = {
-    "Certification": <FiAward className="h-6 w-6 text-primary" />,
-    "Certificação": <FiAward className="h-6 w-6 text-primary" />,
-    "Course": <FiBook className="h-6 w-6 text-primary" />,
-    "Curso": <FiBook className="h-6 w-6 text-primary" />,
-    "Bootcamp": <FiCheckCircle className="h-6 w-6 text-primary" />,
-    "Specialization": <FiCheckCircle className="h-6 w-6 text-primary" />,
-    "Especialização": <FiCheckCircle className="h-6 w-6 text-primary" />,
-    "Formação Profissional": <FiBook className="h-6 w-6 text-primary" />,
-    "Professional Training": <FiBook className="h-6 w-6 text-primary" />,
-    "Treinamento Intensivo": <FiCheckCircle className="h-6 w-6 text-primary" />,
-    "Intensive Training": <FiCheckCircle className="h-6 w-6 text-primary" />,
-    "Graduação": <FiBook className="h-6 w-6 text-primary" />,
-    "Degree": <FiBook className="h-6 w-6 text-primary" />,
+    degree: <FiBook className="h-6 w-6 text-primary" />,
+    certification: <FiAward className="h-6 w-6 text-primary" />,
+    course: <FiBook className="h-6 w-6 text-primary" />,
+    bootcamp: <FiCheckCircle className="h-6 w-6 text-primary" />,
+    specialization: <FiCheckCircle className="h-6 w-6 text-primary" />,
+    training: <FiBook className="h-6 w-6 text-primary" />,
 };
 
-const getIcon = (type) => {
+const getIcon = (typeKey) => {
     // Default fallback
-    return iconMap[type] || <FiCheckCircle className="h-6 w-6 text-primary" />;
+    return iconMap[typeKey] || <FiCheckCircle className="h-6 w-6 text-primary" />;
 };
 
 
@@ -45,7 +38,7 @@ const Education = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     {certifications.map((item, index) => {
-                        const icon = getIcon(item.type);
+                        const icon = getIcon(item.typeKey);
                         return (
                             <div
                                 key={index}

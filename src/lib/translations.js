@@ -61,30 +61,35 @@ export const translations = {
                     title: "Tecnólogo em Tecnologia da Informação",
                     organization: "Centro Universitário Una",
                     type: "Graduação",
+                    typeKey: "degree",
                     description: "Formação superior em Tecnologia da Informação. Belo Horizonte, MG · 2018 - 2020."
                 },
                 {
                     title: "AWS Certified Cloud Practitioner",
                     organization: "Amazon Web Services (AWS)",
                     type: "Certificação",
+                    typeKey: "certification",
                     description: "Validação de conhecimento geral sobre a plataforma de nuvem AWS, incluindo conceitos de segurança e conformidade."
                 },
                 {
                     title: "Node.js, TypeScript, TDD, DDD, Clean Architecture e SOLID",
                     organization: "Udemy · Formação Full Stack",
                     type: "Curso",
+                    typeKey: "course",
                     description: "Domínio de TDD, DDD, Clean Architecture e princípios SOLID aplicados a Node.js e TypeScript."
                 },
                 {
                     title: "DevOps & SRE Bootcamp",
                     organization: "DevOps Bootcamp Live",
                     type: "Bootcamp",
+                    typeKey: "bootcamp",
                     description: "Práticas modernas de DevOps, SRE e automação de infraestrutura para entrega contínua e escalabilidade."
                 },
                 {
                     title: "Desenvolvimento Full Stack, Frontend, Mobile e Arquitetura",
                     organization: "Formação Completa",
                     type: "Curso",
+                    typeKey: "course",
                     description: "Desenvolvimento Full Stack (Frontend, Mobile), focando em padrões modernos de arquitetura de software."
                 },
             ]
@@ -208,30 +213,35 @@ export const translations = {
                     title: "Technologist Degree in Information Technology",
                     organization: "Centro Universitário Una",
                     type: "Degree",
+                    typeKey: "degree",
                     description: "Higher education in Information Technology. Belo Horizonte, MG · 2018 - 2020."
                 },
                 {
                     title: "AWS Certified Cloud Practitioner",
                     organization: "Amazon Web Services (AWS)",
                     type: "Certification",
+                    typeKey: "certification",
                     description: "Validation of overall AWS cloud platform knowledge, including security and compliance concepts."
                 },
                 {
                     title: "Node.js, TypeScript, TDD, DDD, Clean Architecture and SOLID",
                     organization: "Udemy · Full Stack Training",
                     type: "Course",
+                    typeKey: "course",
                     description: "Mastery of TDD, DDD, Clean Architecture, and SOLID principles applied to Node.js and TypeScript."
                 },
                 {
                     title: "DevOps & SRE Bootcamp",
                     organization: "DevOps Bootcamp Live",
                     type: "Bootcamp",
+                    typeKey: "bootcamp",
                     description: "Modern DevOps, SRE, and infrastructure automation practices for continuous delivery and scalability."
                 },
                 {
                     title: "Full Stack, Frontend, Mobile and Architecture Development",
                     organization: "Complete Training",
                     type: "Course",
+                    typeKey: "course",
                     description: "Full Stack Development (Frontend, Mobile), focusing on modern software architecture patterns."
                 },
             ]
