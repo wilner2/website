@@ -15,9 +15,10 @@ const Footer = () => {
           </p>
           <div className="flex space-x-6">
             <a
-              href="https://github.com"
+              href="https://github.com/wilner2"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="GitHub"
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
               <FiGithub className="h-5 w-5" />
@@ -26,12 +27,14 @@ const Footer = () => {
               href="https://www.linkedin.com/in/wilner-bruno-arcanjo-660b60106/"
               target="_blank"
               rel="noopener noreferrer"
+              aria-label="LinkedIn"
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
               <FiLinkedin className="h-5 w-5" />
             </a>
             <a
-              href="mailto:example@example.com"
+              href="mailto:wilnerbruno@outlook.com"
+              aria-label="Email"
               className="text-muted-foreground hover:text-foreground transition-colors"
             >
               <FiMail className="h-5 w-5" />
