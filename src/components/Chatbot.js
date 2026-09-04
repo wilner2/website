@@ -9,7 +9,7 @@ const Chatbot = () => {
   const { content, language } = useLanguage();
   const { chatbot } = content;
 
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const [input, setInput] = useState('');
   const [pending, setPending] = useState(false);
   const [messages, setMessages] = useState([]);
