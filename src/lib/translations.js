@@ -6,6 +6,8 @@ export const translations = {
             education: "Educação",
             projects: "Projetos",
             contact: "Contato",
+            openMenu: "Abrir menu",
+            closeMenu: "Fechar menu",
         },
         hero: {
             role: "Software Engineer",
@@ -137,7 +139,9 @@ export const translations = {
                 name: "Seu Nome",
                 email: "Seu Email",
                 message: "Sua Mensagem",
-                submit: "Enviar Mensagem"
+                submit: "Enviar Mensagem",
+                mailSubject: "Contato via portfólio -",
+                mailFrom: "De"
             },
             info: {
                 title: "Informações de Contato",
@@ -158,6 +162,8 @@ export const translations = {
             education: "Education",
             projects: "Projects",
             contact: "Contact",
+            openMenu: "Open menu",
+            closeMenu: "Close menu",
         },
         hero: {
             role: "Software Engineer",
@@ -289,7 +295,9 @@ export const translations = {
                 name: "Your Name",
                 email: "Your Email",
                 message: "Your Message",
-                submit: "Send Message"
+                submit: "Send Message",
+                mailSubject: "Portfolio contact -",
+                mailFrom: "From"
             },
             info: {
                 title: "Contact Information",

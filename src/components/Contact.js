@@ -1,13 +1,30 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { FiMail, FiPhone, FiMapPin, FiLinkedin } from 'react-icons/fi';
 import { Button } from './ui/button';
 import { Input } from './ui/input';
 import { Textarea } from './ui/textarea';
 import { useLanguage } from './ui/language-provider';
 
+const CONTACT_EMAIL = 'wilnerbruno@outlook.com';
+
 const Contact = () => {
   const { content } = useLanguage();
   const { contact } = content;
+  const [form, setForm] = useState({ name: '', email: '', message: '' });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const subject = encodeURIComponent(`${contact.form.mailSubject} ${form.name}`.trim());
+    const body = encodeURIComponent(
+      `${contact.form.mailFrom}: ${form.name} (${form.email})\n\n${form.message}`
+    );
+    window.location.href = `mailto:${CONTACT_EMAIL}?subject=${subject}&body=${body}`;
+  };
 
   return (
     <section id="contact" className="py-16 sm:py-20 lg:py-24 bg-background relative overflow-hidden transition-colors duration-300 border-t border-border/40">
@@ -26,10 +43,45 @@ const Contact = () => {
             <h3 className="text-2xl font-bold text-foreground mb-4">
               {contact.getInTouch}
             </h3>
-            <form className="space-y-4">
-              <Input type="text" placeholder={contact.form.name} className="bg-background border-input text-foreground placeholder:text-muted-foreground focus-visible:ring-ring" />
-              <Input type="email" placeholder={contact.form.email} className="bg-background border-input text-foreground placeholder:text-muted-foreground focus-visible:ring-ring" />
-              <Textarea placeholder={contact.form.message} className="bg-background border-input text-foreground placeholder:text-muted-foreground focus-visible:ring-ring min-h-[120px]" />
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <label htmlFor="contact-name" className="sr-only">{contact.form.name}</label>
+                <Input
+                  id="contact-name"
+                  name="name"
+                  type="text"
+                  required
+                  value={form.name}
+                  onChange={handleChange}
+                  placeholder={contact.form.name}
+                  className="bg-background border-input text-foreground placeholder:text-muted-foreground focus-visible:ring-ring"
+                />
+              </div>
+              <div>
+                <label htmlFor="contact-email" className="sr-only">{contact.form.email}</label>
+                <Input
+                  id="contact-email"
+                  name="email"
+                  type="email"
+                  required
+                  value={form.email}
+                  onChange={handleChange}
+                  placeholder={contact.form.email}
+                  className="bg-background border-input text-foreground placeholder:text-muted-foreground focus-visible:ring-ring"
+                />
+              </div>
+              <div>
+                <label htmlFor="contact-message" className="sr-only">{contact.form.message}</label>
+                <Textarea
+                  id="contact-message"
+                  name="message"
+                  required
+                  value={form.message}
+                  onChange={handleChange}
+                  placeholder={contact.form.message}
+                  className="bg-background border-input text-foreground placeholder:text-muted-foreground focus-visible:ring-ring min-h-[120px]"
+                />
+              </div>
               <Button type="submit" className="w-full font-semibold">{contact.form.submit}</Button>
             </form>
           </div>
