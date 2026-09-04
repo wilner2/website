@@ -34,7 +34,7 @@ const Hero = () => {
         <h1 className="text-4xl sm:text-5xl md:text-6xl font-extrabold tracking-tight text-foreground lg:text-7xl">
           Wilner Bruno Arcanjo
         </h1>
-        <p className="max-w-[700px] text-lg text-muted-foreground sm:text-xl">
+        <p className="mx-auto max-w-[700px] text-lg text-muted-foreground sm:text-xl">
           {hero.role}
         </p>
         <p className="text-sm text-muted-foreground/80">{hero.tagline}</p>
