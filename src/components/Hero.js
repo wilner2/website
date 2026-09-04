@@ -17,7 +17,7 @@ const Hero = () => {
         <div className="absolute bottom-0 left-0 right-0 top-0 bg-[linear-gradient(to_right,#4f4f4f2e_1px,transparent_1px),linear-gradient(to_bottom,#4f4f4f2e_1px,transparent_1px)] dark:bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:14px_24px] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)]"></div>
       </div>
 
-      <div className="max-w-3xl mx-auto space-y-6 relative z-10">
+      <div className="w-full max-w-3xl mx-auto space-y-6 relative z-10">
         <div className="flex justify-center">
           <Avatar className="h-40 w-40 border-4 border-muted">
             <AvatarImage
@@ -38,7 +38,7 @@ const Hero = () => {
           {hero.role}
         </p>
         <p className="text-sm text-muted-foreground/80">{hero.tagline}</p>
-        <div className="flex justify-center gap-4">
+        <div className="flex flex-wrap justify-center gap-4">
           <Button variant="outline" size="lg" asChild>
             <a href="https://github.com/wilner2" target="_blank" rel="noopener noreferrer">
               <FiGithub className="mr-2 h-4 w-4" /> GitHub
