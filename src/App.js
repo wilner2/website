@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import About from './components/About';
@@ -8,10 +8,11 @@ import Skills from './components/Skills';
 import Projects from './components/Projects';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
-import Chatbot from './components/Chatbot';
 import FadeIn from './components/ui/FadeIn';
 import { ThemeProvider } from './components/ui/theme-provider';
 import { LanguageProvider } from './components/ui/language-provider.js';
+
+const Chatbot = lazy(() => import('./components/Chatbot'));
 
 function App() {
   return (
@@ -40,7 +41,9 @@ function App() {
           <Contact />
         </FadeIn>
         <Footer />
-        <Chatbot />
+        <Suspense fallback={null}>
+          <Chatbot />
+        </Suspense>
       </ThemeProvider>
     </LanguageProvider>
   );
