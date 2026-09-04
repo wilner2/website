@@ -19,18 +19,18 @@ const Experience = () => {
         </h2>
         <div className="relative">
           {/* Central Line with Gradient */}
-          <div className="absolute w-0.5 h-full bg-gradient-to-b from-primary/80 via-muted to-transparent left-1/2 transform -translate-x-1/2 hidden md:block rounded-full"></div>
+          <div className="absolute w-0.5 h-full bg-gradient-to-b from-primary/80 via-muted to-transparent left-1/2 transform -translate-x-1/2 hidden lg:block rounded-full"></div>
 
           {experiences.map((experience, index) => (
             <div
               key={index}
-              className={`mb-12 flex flex-col md:flex-row items-center w-full group ${index % 2 === 0 ? 'md:flex-row-reverse' : ''
+              className={`mb-12 flex flex-col lg:flex-row items-center w-full group ${index % 2 === 0 ? 'lg:flex-row-reverse' : ''
                 }`}
             >
-              <div className="w-full md:w-1/2"></div>
-              <div className="w-full md:w-1/2 px-4 relative">
+              <div className="w-full lg:w-1/2"></div>
+              <div className="w-full lg:w-1/2 px-4 relative">
                 {/* Dot on the line */}
-                <div className={`absolute top-6 w-5 h-5 bg-background border-4 border-primary rounded-full hidden md:block transform -translate-y-1/2 z-20 shadow-md group-hover:scale-125 transition-transform duration-300
+                <div className={`absolute top-6 w-5 h-5 bg-background border-4 border-primary rounded-full hidden lg:block transform -translate-y-1/2 z-20 shadow-md group-hover:scale-125 transition-transform duration-300
                   ${index % 2 === 0 ? '-left-[10px]' : '-right-[11px]'}`}
                 ></div>
 
