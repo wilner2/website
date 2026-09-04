@@ -4,6 +4,8 @@ import { Button } from './ui/button';
 import { useLanguage } from './ui/language-provider';
 
 const GITHUB_USER = 'wilner2';
+const CACHE_KEY = `gh-repos-cache:${GITHUB_USER}`;
+const CACHE_TTL = 60 * 60 * 1000; // 1h
 
 const Projects = () => {
   const { content } = useLanguage();
@@ -16,6 +18,17 @@ const Projects = () => {
     let cancelled = false;
 
     const load = async () => {
+      try {
+        const cached = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null');
+        if (cached && Date.now() - cached.ts < CACHE_TTL) {
+          setRepos(cached.data);
+          setStatus('ready');
+          return;
+        }
+      } catch (err) {
+        // corrupted cache entry, ignore and fetch fresh
+      }
+
       try {
         const res = await fetch(
           `https://api.github.com/users/${GITHUB_USER}/repos?sort=updated&per_page=100`
@@ -30,8 +43,24 @@ const Projects = () => {
 
         setRepos(filtered);
         setStatus('ready');
+        try {
+          localStorage.setItem(CACHE_KEY, JSON.stringify({ ts: Date.now(), data: filtered }));
+        } catch (err) {
+          // storage full or unavailable, safe to ignore
+        }
       } catch (err) {
-        if (!cancelled) setStatus('error');
+        if (cancelled) return;
+        try {
+          const stale = JSON.parse(localStorage.getItem(CACHE_KEY) || 'null');
+          if (stale) {
+            setRepos(stale.data);
+            setStatus('ready');
+            return;
+          }
+        } catch (parseErr) {
+          // no usable stale cache
+        }
+        setStatus('error');
       }
     };
 
