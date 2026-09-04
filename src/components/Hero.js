@@ -20,7 +20,14 @@ const Hero = () => {
       <div className="max-w-3xl mx-auto space-y-6 relative z-10">
         <div className="flex justify-center">
           <Avatar className="h-40 w-40 border-4 border-muted">
-            <AvatarImage src="/myphoto.jpg" alt="Wilner Bruno" className="object-cover" />
+            <AvatarImage
+              src="/myphoto.jpg"
+              alt="Wilner Bruno"
+              width={160}
+              height={160}
+              loading="eager"
+              className="object-cover"
+            />
             <AvatarFallback className="text-4xl">WB</AvatarFallback>
           </Avatar>
         </div>
@@ -30,9 +37,10 @@ const Hero = () => {
         <p className="max-w-[700px] text-lg text-muted-foreground sm:text-xl">
           {hero.role}
         </p>
+        <p className="text-sm text-muted-foreground/80">{hero.tagline}</p>
         <div className="flex justify-center gap-4">
           <Button variant="outline" size="lg" asChild>
-            <a href="https://github.com" target="_blank" rel="noopener noreferrer">
+            <a href="https://github.com/wilner2" target="_blank" rel="noopener noreferrer">
               <FiGithub className="mr-2 h-4 w-4" /> GitHub
             </a>
           </Button>
@@ -42,7 +50,7 @@ const Hero = () => {
             </a>
           </Button>
           <Button variant="outline" size="lg" asChild>
-            <a href="mailto:example@example.com">
+            <a href="mailto:wilnerbruno@outlook.com">
               <FiMail className="mr-2 h-4 w-4" /> {hero.email}
             </a>
           </Button>
