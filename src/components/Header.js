@@ -21,6 +21,7 @@ const Header = () => {
           <Button variant="ghost" asChild><a href="#about">{header.about}</a></Button>
           <Button variant="ghost" asChild><a href="#experience">{header.experience}</a></Button>
           <Button variant="ghost" asChild><a href="#education">{header.education}</a></Button>
+          <Button variant="ghost" asChild><a href="#projects">{header.projects}</a></Button>
           <Button variant="ghost" asChild><a href="#contact">{header.contact}</a></Button>
         </nav>
 

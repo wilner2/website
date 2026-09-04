@@ -15,6 +15,8 @@ const iconMap = {
     "Professional Training": <FiBook className="h-6 w-6 text-primary" />,
     "Treinamento Intensivo": <FiCheckCircle className="h-6 w-6 text-primary" />,
     "Intensive Training": <FiCheckCircle className="h-6 w-6 text-primary" />,
+    "Graduação": <FiBook className="h-6 w-6 text-primary" />,
+    "Degree": <FiBook className="h-6 w-6 text-primary" />,
 };
 
 const getIcon = (type) => {

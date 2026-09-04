@@ -5,8 +5,10 @@ import About from './components/About';
 import Experience from './components/Experience';
 import Education from './components/Education';
 import Skills from './components/Skills';
+import Projects from './components/Projects';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
+import Chatbot from './components/Chatbot';
 import FadeIn from './components/ui/FadeIn';
 import { ThemeProvider } from './components/ui/theme-provider';
 import { LanguageProvider } from './components/ui/language-provider.js';
@@ -32,9 +34,13 @@ function App() {
           <Skills />
         </FadeIn>
         <FadeIn>
+          <Projects />
+        </FadeIn>
+        <FadeIn>
           <Contact />
         </FadeIn>
         <Footer />
+        <Chatbot />
       </ThemeProvider>
     </LanguageProvider>
   );
