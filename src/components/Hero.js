@@ -1,5 +1,5 @@
 import React from 'react';
-import { FiGithub, FiLinkedin, FiMail } from 'react-icons/fi';
+import { FiGithub, FiLinkedin, FiMail, FiDownload } from 'react-icons/fi';
 import { Button } from './ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from './ui/avatar';
 import { useLanguage } from './ui/language-provider';
@@ -38,18 +38,23 @@ const Hero = () => {
           {hero.role}
         </p>
         <p className="text-sm text-muted-foreground/80">{hero.tagline}</p>
-        <div className="flex flex-wrap justify-center gap-4">
-          <Button variant="outline" size="lg" asChild>
+        <div className="flex flex-wrap justify-center gap-3">
+          <Button variant="default" size="lg" asChild>
+            <a href="/Wilner_Bruno_Curriculo.pdf" download>
+              <FiDownload className="mr-2 h-4 w-4" /> {hero.resume}
+            </a>
+          </Button>
+          <Button variant="outline" size="sm" asChild>
             <a href="https://github.com/wilner2" target="_blank" rel="noopener noreferrer">
               <FiGithub className="mr-2 h-4 w-4" /> GitHub
             </a>
           </Button>
-          <Button variant="outline" size="lg" asChild>
+          <Button variant="outline" size="sm" asChild>
             <a href="https://www.linkedin.com/in/wilner-bruno-arcanjo-660b60106/" target="_blank" rel="noopener noreferrer">
               <FiLinkedin className="mr-2 h-4 w-4" /> LinkedIn
             </a>
           </Button>
-          <Button variant="outline" size="lg" asChild>
+          <Button variant="outline" size="sm" asChild>
             <a href="mailto:wilnerbruno@outlook.com">
               <FiMail className="mr-2 h-4 w-4" /> {hero.email}
             </a>

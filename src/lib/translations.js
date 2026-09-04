@@ -12,7 +12,8 @@ export const translations = {
         hero: {
             role: "Software Engineer",
             tagline: "Node.js · Python · TypeScript · AWS · Kubernetes",
-            email: "Email"
+            email: "Email",
+            resume: "Baixar Currículo"
         },
         about: {
             title: "Sobre Mim",
@@ -168,7 +169,8 @@ export const translations = {
         hero: {
             role: "Software Engineer",
             tagline: "Node.js · Python · TypeScript · AWS · Kubernetes",
-            email: "Email"
+            email: "Email",
+            resume: "Download Resume"
         },
         about: {
             title: "About Me",
