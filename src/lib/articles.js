@@ -324,7 +324,7 @@ No fim das contas, esse incidente não foi só sobre uma placa de veículo mal v
     {
         slug: 'dificuldades-monolito-modular',
         title: 'Dificuldades de uma arquitetura monólito modular que eu passei',
-        date: '2026-09-05',
+        date: '2025-03-15',
         excerpt:
             'Três atritos reais de projetar um sistema de rastreamento de pacotes multi-transportadora como monólito modular — e o que cada um nos ensinou sobre acoplamento.',
         content: `Monólito modular é frequentemente vendido como o "meio-termo sensato" entre o monólito tradicional e microsserviços: você organiza o código em módulos bem definidos, mantém um único deploy, e adia a complexidade operacional de uma arquitetura distribuída completa. Na teoria, funciona bem. Na prática, alguns dos problemas que essa arquitetura promete evitar simplesmente aparecem mais tarde — e de formas menos óbvias.
