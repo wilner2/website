@@ -192,6 +192,135 @@ Para aumentar a segurança das contas, é fundamental habilitar a Autenticação
 Dessa forma é possível criar uma grande quantidade de usuários de forma automatizada e aplicando com obrigatoriedade o uso do MFA para melhor segurança das contas.
 `,
     },
+    {
+        slug: 'campo-undefined-observabilidade-dynatrace',
+        title:
+            'Um campo undefined que derrubou pagamentos e marketing: como a observabilidade nos salvou 3 horas de dor de cabeça',
+        date: '2026-09-05',
+        excerpt:
+            'Um incidente pequeno na origem, grande no impacto — e o papel do Dynatrace em transformar horas de investigação em 10 minutos.',
+        content: `Toda equipe de engenharia tem uma história parecida com essa: um bug pequeno, quase invisível, que se espalha por partes do sistema que, à primeira vista, não têm nada a ver com ele. Esta semana vivemos exatamente isso na nossa produção — e a forma como conseguimos identificar a causa raiz em minutos, em vez de horas, mostra bem por que observabilidade deixou de ser luxo de time de infra e virou parte central da engenharia de software.
+
+Este artigo é um relato direto desse incidente: o que aconteceu, como o Dynatrace nos ajudou a enxergar o problema, e a lição que ele deixou.
+
+## O gatilho: um campo que não deveria estar vazio
+
+Tudo começou com uma mudança no frontend que passou a enviar o campo \`license_plate\` (placa do veículo) como \`undefined\` para o backend. Isoladamente, isso já seria um problema simples: o backend não sabia lidar com esse valor e começou a retornar **erros 500** em várias requisições.
+
+Só que esse campo não ficava só dentro do nosso sistema. O backend repassava o \`license_plate\` para uma **API de terceiros**. E foi aí que o problema saiu do campo técnico e virou um problema de negócio.
+
+<figure>
+<svg viewBox="0 0 640 300" role="img" aria-label="Frontend envia license_plate undefined para o backend, que encaminha o payload para uma API de terceiros. Pagamentos e Marketing também chamam essa mesma API para fins não relacionados a placas de veículo. A API bloqueia o IP após o volume de valores undefined, derrubando os três consumidores ao mesmo tempo." style="width:100%;height:auto;">
+<defs>
+<marker id="arrowhead1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+<path d="M1 1L8 5L1 9" fill="none" stroke="context-stroke" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+</defs>
+<rect x="20" y="24" width="140" height="48" rx="8" fill="none" stroke="currentColor" stroke-width="1.2"/>
+<text x="90" y="53" text-anchor="middle" font-size="13" fill="currentColor">Frontend</text>
+<rect x="20" y="120" width="140" height="48" rx="8" fill="none" stroke="currentColor" stroke-width="1.2"/>
+<text x="90" y="149" text-anchor="middle" font-size="13" fill="currentColor">Backend</text>
+<rect x="20" y="216" width="140" height="48" rx="8" fill="hsl(var(--destructive) / 0.12)" stroke="hsl(var(--destructive))" stroke-width="1.2"/>
+<text x="90" y="240" text-anchor="middle" font-size="13" fill="currentColor">Pagamentos</text>
+<text x="90" y="256" text-anchor="middle" font-size="11" fill="hsl(var(--destructive))">indisponível</text>
+<rect x="190" y="216" width="140" height="48" rx="8" fill="hsl(var(--destructive) / 0.12)" stroke="hsl(var(--destructive))" stroke-width="1.2"/>
+<text x="260" y="240" text-anchor="middle" font-size="13" fill="currentColor">Marketing</text>
+<text x="260" y="256" text-anchor="middle" font-size="11" fill="hsl(var(--destructive))">indisponível</text>
+<rect x="430" y="108" width="190" height="84" rx="8" fill="hsl(var(--destructive) / 0.12)" stroke="hsl(var(--destructive))" stroke-width="1.6"/>
+<text x="525" y="136" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor">API de terceiros</text>
+<text x="525" y="156" text-anchor="middle" font-size="11" fill="hsl(var(--destructive))">bloqueia o IP</text>
+<text x="525" y="172" text-anchor="middle" font-size="11" fill="hsl(var(--destructive))">após volume de undefined</text>
+<line x1="90" y1="72" x2="90" y2="118" stroke="currentColor" stroke-width="1.4" marker-end="url(#arrowhead1)"/>
+<text x="98" y="98" font-size="11" fill="currentColor">license_plate: undefined</text>
+<line x1="160" y1="144" x2="428" y2="144" stroke="currentColor" stroke-width="1.4" marker-end="url(#arrowhead1)"/>
+<text x="200" y="136" font-size="11" fill="currentColor">encaminha o payload</text>
+<line x1="160" y1="230" x2="428" y2="168" stroke="currentColor" stroke-width="1.2" marker-end="url(#arrowhead1)"/>
+<line x1="330" y1="230" x2="428" y2="182" stroke="currentColor" stroke-width="1.2" marker-end="url(#arrowhead1)"/>
+<text x="345" y="206" font-size="11" fill="currentColor">chamadas sem relação com placas</text>
+</svg>
+<figcaption>O bug ficava isolado no fluxo de placas de veículo, mas o bloqueio de IP na API de terceiros — compartilhada por Pagamentos e Marketing — espalhou a indisponibilidade para áreas sem nenhuma relação com o bug original.</figcaption>
+</figure>
+
+## O efeito cascata: quando o sintoma esconde o verdadeiro problema
+
+Como o valor \`undefined\` estava sendo enviado repetidamente, em volume, a API terceira interpretou aquilo como um padrão anômalo — e fez o que qualquer API bem protegida faz: **bloqueou o IP do nosso backend**.
+
+O problema é que essa mesma API era compartilhada por outras frentes do sistema, sem relação direta com placas de veículo: **atualização de pagamento, integrações de marketing, entre outras**. Com o IP bloqueado, **100% das requisições para essa API passaram a ser negadas**, independentemente de qual fluxo de negócio estava chamando.
+
+Ou seja: um bug de validação em um campo específico se transformou em uma indisponibilidade que atingia áreas completamente diferentes do produto. Esse é um padrão clássico de sistemas distribuídos — falhas não ficam contidas onde nasceram, elas se propagam através das dependências.
+
+## Onde a observabilidade fez a diferença
+
+Sem uma stack de observabilidade madura, esse tipo de incidente costuma virar uma caça ao tesouro: alguém percebe erros de pagamento, outra pessoa percebe falha em marketing, e o time começa a investigar em direções separadas, sem saber que é a mesma causa raiz.
+
+Não foi o que aconteceu aqui. O **Dynatrace disparou o alerta automaticamente** assim que o volume de erros 500 começou a subir. A partir daí, dois recursos foram decisivos:
+
+- **Traces distribuídos**, que mostraram exatamente em qual serviço e em qual chamada o erro estava se originando — deixando claro que a falha vinha da chamada à API de terceiros, e não de múltiplos pontos desconectados.
+- **Logs estruturados**, que permitiram correlacionar o erro ao payload problemático (o \`license_plate\` chegando como \`undefined\`) sem precisar reproduzir o cenário manualmente ou vasculhar logs não estruturados linha por linha.
+
+O resultado: **10 minutos após o alerta**, o time já tinha identificado a causa raiz completa — do erro 500 ao bloqueio de IP. Esse é o tipo de ganho que observabilidade bem implementada entrega: não é só saber *que* algo está errado, é saber *onde* e *por quê* quase em tempo real.
+
+## Por que a resolução levou 3 horas, então?
+
+Aqui está um ponto que vale destacar, porque não é sobre tecnologia — é sobre processo. Identificar a causa raiz levou minutos. **Resolver completamente o incidente levou cerca de 3 horas**, e o motivo foi a natureza do problema: o bloqueio não estava no nosso controle.
+
+<figure>
+<svg viewBox="0 0 640 180" role="img" aria-label="Linha do tempo do incidente: detecção automática via Dynatrace em 10 minutos, contrastando com 180 minutos até a resolução completa, com fix aplicado, contato com o fornecedor e war room ocorrendo nesse intervalo mais longo." style="width:100%;height:auto;">
+<line x1="30" y1="100" x2="62" y2="100" stroke="hsl(var(--primary))" stroke-width="8" stroke-linecap="round"/>
+<line x1="62" y1="100" x2="610" y2="100" stroke="currentColor" stroke-width="8" stroke-linecap="round" opacity="0.25"/>
+<circle cx="30" cy="100" r="4" fill="currentColor"/>
+<circle cx="62" cy="100" r="4" fill="hsl(var(--primary))"/>
+<circle cx="199" cy="100" r="4" fill="currentColor"/>
+<circle cx="336" cy="100" r="4" fill="currentColor"/>
+<circle cx="473" cy="100" r="4" fill="currentColor"/>
+<circle cx="610" cy="100" r="4" fill="currentColor"/>
+<line x1="30" y1="96" x2="30" y2="84" stroke="currentColor" stroke-width="1"/>
+<line x1="199" y1="96" x2="199" y2="84" stroke="currentColor" stroke-width="1"/>
+<line x1="473" y1="96" x2="473" y2="84" stroke="currentColor" stroke-width="1"/>
+<line x1="62" y1="104" x2="62" y2="116" stroke="hsl(var(--primary))" stroke-width="1"/>
+<line x1="336" y1="104" x2="336" y2="116" stroke="currentColor" stroke-width="1"/>
+<line x1="610" y1="104" x2="610" y2="116" stroke="currentColor" stroke-width="1"/>
+<text x="30" y="80" text-anchor="middle" font-size="12" fill="currentColor">Alerta</text>
+<text x="30" y="65" text-anchor="middle" font-size="11" fill="currentColor">0 min</text>
+<text x="199" y="80" text-anchor="middle" font-size="12" fill="currentColor">Fix aplicado</text>
+<text x="473" y="80" text-anchor="middle" font-size="12" fill="currentColor">War room</text>
+<text x="62" y="122" text-anchor="middle" font-size="12" fill="hsl(var(--primary))">Causa raiz</text>
+<text x="62" y="137" text-anchor="middle" font-size="11" fill="hsl(var(--primary))">10 min</text>
+<text x="336" y="122" text-anchor="middle" font-size="12" fill="currentColor">Contato fornecedor</text>
+<text x="610" y="122" text-anchor="middle" font-size="12" fill="currentColor">Resolvido</text>
+<text x="610" y="137" text-anchor="middle" font-size="11" fill="currentColor">180 min</text>
+</svg>
+<figcaption>Detecção automática via Dynatrace levou 10 minutos; resolução completa levou 180 — a diferença entre os dois foi processo e comunicação entre times, não tecnologia.</figcaption>
+</figure>
+
+Foi necessário:
+
+1. **Aplicar o fix** de validação — tanto no frontend quanto no backend — para impedir que valores inválidos de \`license_plate\` continuassem sendo enviados.
+2. **Entrar em contato com o time da API de terceiros**, explicar a causa técnica do bloqueio e negociar o desbloqueio do nosso IP.
+3. **Abrir uma war room**, reunindo pessoas técnicas e de negócio, para comunicar com clareza o impacto em pagamentos e marketing enquanto o desbloqueio estava em andamento — algo essencial quando a indisponibilidade extrapola o time de engenharia e afeta áreas do negócio que precisam se posicionar externamente.
+
+Isso reforça algo que muitas vezes é subestimado: **o MTTD (tempo até detectar) pode ser rápido, mas o MTTR (tempo até resolver) muitas vezes depende de fatores fora do código** — comunicação entre times, dependências externas, alinhamento com o negócio. Observabilidade acelera a primeira parte de forma dramática; a segunda ainda exige processo e comunicação bem alinhados.
+
+## A lição que mais dói (no bom sentido)
+
+Se tem uma conclusão que resume esse incidente inteiro, é esta: **uma validação simples de tamanho de caractere no campo \`license_plate\` — antes de repassá-lo à API de terceiros — teria evitado tudo.**
+
+> Não o alerta, não o bloqueio de IP, não as 3 horas de indisponibilidade em pagamentos e marketing, não a war room. Uma linha de validação.
+
+É um lembrete valioso: observabilidade não substitui boas práticas de defesa em profundidade (validação de schema, sanitização de input, circuit breakers para dependências externas). Ela é o que garante que, **quando** essas lacunas existirem — e elas vão existir — você descubra em minutos, e não em horas.
+
+## O que fica desse episódio
+
+- **Erros pequenos podem ter efeito cascata em sistemas distribuídos**, especialmente quando dependências externas são compartilhadas por múltiplos fluxos de negócio.
+- **Observabilidade bem implementada (traces + logs estruturados) reduz drasticamente o tempo de diagnóstico** — no nosso caso, de um problema que poderia ter levado horas para ser entendido, para 10 minutos.
+- **MTTD e MTTR são coisas diferentes.** Detectar rápido é resultado de boa instrumentação; resolver rápido depende também de comunicação, processo e, às vezes, de terceiros fora do seu controle.
+- **Validação de input continua sendo uma das defesas mais baratas e mais negligenciadas** em arquiteturas de microsserviços.
+
+---
+
+No fim das contas, esse incidente não foi só sobre uma placa de veículo mal validada. Foi um lembrete de que observabilidade e boas práticas de engenharia não competem entre si — elas se complementam. Uma reduz o tempo de descoberta, a outra reduz a chance de o problema acontecer.
+`,
+    },
 ];
 
 export function getSortedArticles() {
