@@ -22,6 +22,14 @@ const markdownComponents = {
         </a>
     ),
     strong: ({ children }) => <strong className="font-semibold text-foreground">{children}</strong>,
+    img: ({ src, alt }) => (
+        <img
+            src={src}
+            alt={alt || ''}
+            loading="lazy"
+            className="w-full rounded-lg border border-border/60 my-2"
+        />
+    ),
     blockquote: ({ children }) => (
         <blockquote className="border-l-4 border-primary/40 pl-4 italic text-muted-foreground my-4">{children}</blockquote>
     ),
