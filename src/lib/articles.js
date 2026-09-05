@@ -321,6 +321,113 @@ Se tem uma conclusão que resume esse incidente inteiro, é esta: **uma validaç
 No fim das contas, esse incidente não foi só sobre uma placa de veículo mal validada. Foi um lembrete de que observabilidade e boas práticas de engenharia não competem entre si — elas se complementam. Uma reduz o tempo de descoberta, a outra reduz a chance de o problema acontecer.
 `,
     },
+    {
+        slug: 'dificuldades-monolito-modular',
+        title: 'Dificuldades de uma arquitetura monólito modular que eu passei',
+        date: '2026-09-05',
+        excerpt:
+            'Três atritos reais de projetar um sistema de rastreamento de pacotes multi-transportadora como monólito modular — e o que cada um nos ensinou sobre acoplamento.',
+        content: `Monólito modular é frequentemente vendido como o "meio-termo sensato" entre o monólito tradicional e microsserviços: você organiza o código em módulos bem definidos, mantém um único deploy, e adia a complexidade operacional de uma arquitetura distribuída completa. Na teoria, funciona bem. Na prática, alguns dos problemas que essa arquitetura promete evitar simplesmente aparecem mais tarde — e de formas menos óbvias.
+
+Este artigo é um relato de um projeto real onde isso aconteceu: um sistema de rastreamento de pacotes de múltiplas transportadoras, construído como monólito modular, e as três dificuldades que nos forçaram a repensar decisões de arquitetura no meio do caminho.
+
+## O contexto: rastreamento de pacotes multi-transportadora
+
+A arquitetura era composta por três camadas lógicas dentro do mesmo monólito:
+
+- **Inbound** — um serviço responsável por receber a entrada de novos pacotes vindos das transportadoras.
+- **Serviços por transportadora** — módulos separados por transportadora, cada um capaz de escalar horizontal e verticalmente, responsáveis por buscar atualizações de status diretamente na transportadora e detectar mudanças de evento no pacote.
+- **Outbound** — a camada que, ao detectar uma mudança relevante em um pacote, disparava um webhook ou mensagem para as demais frentes internas da empresa interessadas naquele pacote.
+
+Já sabíamos, desde o início, que o projeto legado que estávamos substituindo era uma mistura de comunicação síncrona e assíncrona — e que a nova arquitetura provavelmente enfrentaria decisões parecidas. O que não estava claro era exatamente onde essas decisões iriam doer primeiro.
+
+Vale um contexto importante antes de entrar nas dificuldades: o time responsável por esse projeto era enxuto, assim como os recursos disponíveis. Isso não é um detalhe menor — ele explica boa parte das escolhas que vêm a seguir. Com um time pequeno, cada decisão de arquitetura precisava equilibrar robustez contra velocidade de entrega. Não dava para parar o roadmap por meses para migrar tudo para microsserviços "do jeito certo" antes de colocar o produto em produção. As soluções que vieram — janelas de manutenção em vez de zero-downtime desde o dia um, deploy dividido em duas partes em vez de N partes independentes, ECS dedicado só onde o problema já doía de verdade — são reflexo direto dessa realidade: trade-offs conscientes, não atalhos por falta de conhecimento.
+
+<figure>
+<svg viewBox="0 0 680 300" role="img" aria-label="Inbound recebe pacotes das transportadoras e encaminha para serviços independentes por transportadora, cada um em seu próprio ECS; todos publicam eventos em uma fila SNS/SQS que atua como buffer de resiliência antes de chegar à camada outbound, responsável pelos webhooks." style="width:100%;height:auto;">
+<defs>
+<marker id="arrow3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+<path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+</marker>
+</defs>
+<rect x="20" y="112" width="120" height="56" rx="8" fill="none" stroke="currentColor" stroke-width="1.2"/>
+<text x="80" y="136" text-anchor="middle" font-size="13" fill="currentColor">Inbound</text>
+<text x="80" y="152" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.7">novos pacotes</text>
+<line x1="140" y1="140" x2="176" y2="140" stroke="currentColor" stroke-width="1.2" marker-end="url(#arrow3)"/>
+<rect x="180" y="30" width="150" height="48" rx="8" fill="none" stroke="currentColor" stroke-width="1.2"/>
+<text x="255" y="50" text-anchor="middle" font-size="13" fill="currentColor">Transp. A</text>
+<text x="255" y="65" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.7">ECS próprio</text>
+<rect x="180" y="88" width="150" height="48" rx="8" fill="none" stroke="currentColor" stroke-width="1.2"/>
+<text x="255" y="108" text-anchor="middle" font-size="13" fill="currentColor">Transp. B</text>
+<text x="255" y="123" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.7">ECS próprio</text>
+<rect x="180" y="146" width="150" height="48" rx="8" fill="none" stroke="currentColor" stroke-width="1.2"/>
+<text x="255" y="166" text-anchor="middle" font-size="13" fill="currentColor">Transp. C</text>
+<text x="255" y="181" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.7">ECS próprio</text>
+<rect x="180" y="204" width="150" height="48" rx="8" fill="none" stroke="currentColor" stroke-width="1.2"/>
+<text x="255" y="224" text-anchor="middle" font-size="13" fill="currentColor">Transp. D</text>
+<text x="255" y="239" text-anchor="middle" font-size="10" fill="currentColor" opacity="0.7">ECS próprio</text>
+<line x1="330" y1="54" x2="404" y2="128" stroke="currentColor" stroke-width="1" marker-end="url(#arrow3)"/>
+<line x1="330" y1="112" x2="404" y2="136" stroke="currentColor" stroke-width="1" marker-end="url(#arrow3)"/>
+<line x1="330" y1="170" x2="404" y2="144" stroke="currentColor" stroke-width="1" marker-end="url(#arrow3)"/>
+<line x1="330" y1="228" x2="404" y2="152" stroke="currentColor" stroke-width="1" marker-end="url(#arrow3)"/>
+<rect x="410" y="112" width="150" height="56" rx="8" fill="hsl(var(--primary) / 0.12)" stroke="hsl(var(--primary))" stroke-width="1.6"/>
+<text x="485" y="136" text-anchor="middle" font-size="13" font-weight="700" fill="currentColor">SNS / SQS</text>
+<text x="485" y="153" text-anchor="middle" font-size="9" fill="hsl(var(--primary))">retém eventos na indisponibilidade</text>
+<line x1="560" y1="140" x2="592" y2="140" stroke="currentColor" stroke-width="1.2" marker-end="url(#arrow3)"/>
+<rect x="596" y="112" width="64" height="56" rx="8" fill="none" stroke="currentColor" stroke-width="1.2"/>
+<text x="628" y="136" text-anchor="middle" font-size="12" fill="currentColor">Outbound</text>
+<text x="628" y="152" text-anchor="middle" font-size="9" fill="currentColor" opacity="0.7">webhooks</text>
+</svg>
+<figcaption>Cada transportadora roda em seu próprio serviço ECS, escalando de forma independente; a fila SNS/SQS funciona como buffer de resiliência entre essas camadas e o outbound, absorvendo indisponibilidades sem perder eventos.</figcaption>
+</figure>
+
+## Dificuldade 1: banco compartilhado e migrations bloqueantes
+
+O primeiro problema sério apareceu na camada de dados. Como era um monólito modular, o banco de dados era **compartilhado entre todos os módulos** — inbound, os serviços por transportadora, e outbound liam e escreviam nas mesmas tabelas.
+
+O atrito ficou evidente na hora de aplicar migrations. Sempre que uma migration precisava alterar uma tabela usada por múltiplos workers, era necessário **parar o projeto inteiro** — caso contrário, workers rodando com o schema antigo começavam a falhar contra o schema novo (ou vice-versa) no meio da execução.
+
+Na prática, isso significava:
+
+- Uma mudança de schema em um módulo específico virava um evento coordenado, não uma alteração isolada.
+- A mitigação inicial foi agendar migrations de impacto em horários de baixo movimento — o que reduzia o risco de downtime percebido pelo negócio, mas não resolvia o problema de fundo: o acoplamento continuava lá, só escondido atrás de uma janela de manutenção.
+
+### A solução: comunicação orientada a eventos com SNS/SQS
+
+Com o problema mapeado, a decisão foi migrar toda a comunicação entre as camadas para eventos usando **SNS/SQS**. A lógica é simples e poderosa: se o sistema ficar indisponível por causa de uma migration (ou qualquer outro motivo), a mensagem não se perde — ela fica retida na fila e é reprocessada assim que o sistema volta.
+
+Isso não eliminou o banco compartilhado nem a necessidade de coordenar migrations, mas mudou o efeito colateral de um problema: em vez de erros descartados silenciosamente ou retries manuais, o sistema passou a tolerar indisponibilidade temporária sem perda de dados. A fila virou um buffer de resiliência entre módulos que, arquiteturalmente, ainda estavam mais acoplados do que gostaríamos.
+
+## Dificuldade 2: deploy acoplado
+
+O segundo atrito veio do processo de deploy. Como inbound, os serviços por transportadora e outbound viviam no mesmo código-base, qualquer mudança — mesmo pequena, mesmo isolada a uma única transportadora — corria o risco de exigir um deploy que tocava o sistema inteiro.
+
+A solução aplicada foi dividir o deploy em unidades menores: **inbound e outbound passaram a ter pipelines de deploy separados**. Isso reduziu o raio de impacto de cada mudança — um ajuste na lógica de outbound não precisava mais arrastar um redeploy da camada de inbound, e vice-versa.
+
+Foi uma melhoria real, mas parcial: ainda não era uma separação completa por transportadora, e sim por camada funcional. Um bug introduzido em outbound, por exemplo, ainda afetava o webhook de todas as transportadoras ao mesmo tempo — só que agora sem precisar redeployar inbound junto.
+
+## Dificuldade 3: escalabilidade desigual entre transportadoras
+
+O terceiro problema é bem característico de sistemas que integram múltiplos parceiros externos: **cada transportadora gera um volume de pacotes completamente diferente**. Uma transportadora grande pode gerar dez vezes mais tráfego do que uma pequena, e esse volume muda ao longo do tempo, por sazonalidade ou crescimento do parceiro.
+
+Em um monólito "puro", isso seria um problema sério: escalar o sistema inteiro para atender o pico de uma única transportadora desperdiça recursos com todas as outras. A resposta, aqui, foi dar a **cada transportadora seu próprio serviço ECS, com número de tasks independente**. Isso permitiu escalar horizontal e verticalmente cada frente de acordo com sua demanda real, sem impactar as demais.
+
+Vale notar o que isso realmente significa: na prática, esse ajuste já é um passo fora do monólito modular "clássico" em direção a algo mais próximo de serviços independentes — ainda que compartilhando código-base e banco de dados. É um lembrete de que, quando a demanda de escala diverge o suficiente entre módulos, a arquitetura tende a ser empurrada para fora do monólito, com ou sem uma decisão formal nesse sentido.
+
+## O que fica desses três atritos
+
+- **Banco compartilhado tem um custo que só aparece na operação**, não no design inicial — migrations que "parecem simples" no papel se tornam pontos de coordenação obrigatória em produção.
+- **Comunicação orientada a eventos (SNS/SQS) não resolve acoplamento, mas absorve sua consequência mais dolorosa**: perda de mensagens durante indisponibilidade. É uma rede de segurança, não uma cura.
+- **Deploy acoplado se resolve incrementalmente** — não é preciso quebrar tudo em microsserviços de uma vez; dividir por camada funcional (inbound/outbound) já reduz bastante o raio de impacto.
+- **Escalabilidade desigual entre integrações externas é um sinal precoce** de que partes do seu "monólito modular" já deveriam ser tratadas como serviços independentes, mesmo que o código ainda viva junto.
+
+---
+
+Monólito modular não é uma arquitetura errada — é uma escolha de trade-off, como qualquer outra. Mas vale entrar nela sabendo que alguns dos problemas que ela promete adiar (acoplamento de deploy, escalabilidade desigual, coordenação de schema) não desaparecem: eles só esperam o momento certo para aparecer, geralmente quando o sistema já está em produção e o custo de resolver é maior.
+
+Com um time e recursos enxutos, essas soluções incrementais não foram uma limitação vergonhosa — foram a decisão certa dado o contexto. O ganho real dessa experiência não foi encontrar a arquitetura perfeita — foi aprender a reconhecer esses sinais mais cedo da próxima vez, e a escolher, de forma consciente, onde vale a pena investir tempo de reescrita e onde uma mitigação pontual resolve bem o suficiente.
+`,
+    },
 ];
 
 export function getSortedArticles() {
