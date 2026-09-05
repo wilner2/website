@@ -6,6 +6,7 @@ export const translations = {
             education: "Educação",
             skills: "Habilidades",
             projects: "Projetos",
+            articles: "Artigos",
             contact: "Contato",
             openMenu: "Abrir menu",
             closeMenu: "Fechar menu",
@@ -123,6 +124,14 @@ export const translations = {
             viewAll: "Ver todos no GitHub",
             updated: "Atualizado em"
         },
+        articles: {
+            title: "Artigos",
+            subtitle: "Textos sobre engenharia de software, arquitetura e sistemas distribuídos.",
+            empty: "Nenhum artigo publicado ainda.",
+            readMore: "Ler artigo",
+            backToHome: "Voltar para o início",
+            notFound: "Artigo não encontrado."
+        },
         chatbot: {
             title: "Pergunte sobre meu perfil",
             beta: "Beta · em desenvolvimento",
@@ -164,6 +173,7 @@ export const translations = {
             education: "Education",
             skills: "Skills",
             projects: "Projects",
+            articles: "Articles",
             contact: "Contact",
             openMenu: "Open menu",
             closeMenu: "Close menu",
@@ -280,6 +290,14 @@ export const translations = {
             viewRepo: "View repository",
             viewAll: "View all on GitHub",
             updated: "Updated on"
+        },
+        articles: {
+            title: "Articles",
+            subtitle: "Writing on software engineering, architecture and distributed systems.",
+            empty: "No articles published yet.",
+            readMore: "Read article",
+            backToHome: "Back to home",
+            notFound: "Article not found."
         },
         chatbot: {
             title: "Ask about my profile",
