@@ -2,6 +2,7 @@ import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
 import { FiArrowLeft, FiFileText } from 'react-icons/fi';
 import Header from './Header';
 import Footer from './Footer';
@@ -45,6 +46,10 @@ const markdownComponents = {
     pre: ({ children }) => (
         <pre className="bg-secondary text-secondary-foreground rounded-lg p-4 overflow-x-auto mb-4">{children}</pre>
     ),
+    figure: ({ children }) => <figure className="my-8">{children}</figure>,
+    figcaption: ({ children }) => (
+        <figcaption className="text-xs text-muted-foreground text-center mt-3">{children}</figcaption>
+    ),
 };
 
 const ArticlePage = () => {
@@ -83,7 +88,11 @@ const ArticlePage = () => {
                             <h1 className="text-3xl sm:text-4xl font-extrabold text-foreground tracking-tight mb-8">
                                 {article.title}
                             </h1>
-                            <ReactMarkdown remarkPlugins={[remarkGfm]} components={markdownComponents}>
+                            <ReactMarkdown
+                                remarkPlugins={[remarkGfm]}
+                                rehypePlugins={[rehypeRaw]}
+                                components={markdownComponents}
+                            >
                                 {article.content}
                             </ReactMarkdown>
                         </article>
