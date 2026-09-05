@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { FiMenu, FiX } from 'react-icons/fi';
 import { Button } from './ui/button';
 import { ThemeToggle } from './ui/theme-toggle';
@@ -6,12 +7,13 @@ import { LanguageToggle } from './ui/language-toggle';
 import { useLanguage } from './ui/language-provider';
 
 const NAV_ITEMS = [
-  { href: '#about', key: 'about' },
-  { href: '#experience', key: 'experience' },
-  { href: '#education', key: 'education' },
-  { href: '#skills', key: 'skills' },
-  { href: '#projects', key: 'projects' },
-  { href: '#contact', key: 'contact' },
+  { href: '/#about', key: 'about' },
+  { href: '/#experience', key: 'experience' },
+  { href: '/#education', key: 'education' },
+  { href: '/#skills', key: 'skills' },
+  { href: '/#projects', key: 'projects' },
+  { href: '/#articles', key: 'articles' },
+  { href: '/#contact', key: 'contact' },
 ];
 
 const Header = () => {
@@ -23,19 +25,15 @@ const Header = () => {
     <header className="fixed top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60 border-border/40 transition-colors duration-300">
       <div className="container relative flex h-14 items-center justify-between px-4 sm:px-6 md:px-8">
         {/* Brand */}
-        <button
-          type="button"
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          className="flex items-center font-bold text-foreground tracking-tight"
-        >
+        <Link to="/" className="flex items-center font-bold text-foreground tracking-tight">
           WB
-        </button>
+        </Link>
 
         {/* Centered Navigation (desktop) */}
         <nav className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 items-center space-x-1">
           {NAV_ITEMS.map((item) => (
             <Button key={item.key} variant="ghost" asChild>
-              <a href={item.href}>{header[item.key]}</a>
+              <Link to={item.href}>{header[item.key]}</Link>
             </Button>
           ))}
         </nav>
@@ -60,14 +58,14 @@ const Header = () => {
       {mobileOpen && (
         <nav className="md:hidden border-t border-border/40 bg-background px-4 py-3 flex flex-col">
           {NAV_ITEMS.map((item) => (
-            <a
+            <Link
               key={item.key}
-              href={item.href}
+              to={item.href}
               onClick={() => setMobileOpen(false)}
               className="py-3 text-base text-foreground border-b border-border/20 last:border-b-0"
             >
               {header[item.key]}
-            </a>
+            </Link>
           ))}
         </nav>
       )}
