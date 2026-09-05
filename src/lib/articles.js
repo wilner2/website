@@ -54,6 +54,144 @@ Considerando que o escopo do projeto é global, é importante utilizar o Amazon 
 Ao combinar esses serviços da AWS em uma aplicação web, obtém uma solução escalável, de alto desempenho e altamente disponível. A aplicação pode lidar facilmente com picos de tráfego, oferece uma experiência rápida e confiável aos usuários finais e permite que você se concentre no desenvolvimento e na melhoria da aplicação sem se preocupar com a infraestrutura subjacente.
 `,
     },
+    {
+        slug: 'migracao-usuarios-iam-aws',
+        title:
+            'Migração de usuários de forma automatizada e gerenciamento dos recursos do IAM (Identity and Access Management) da AWS',
+        date: '2024-03-25',
+        excerpt:
+            'Como automatizei a migração de 100 usuários para o IAM da AWS com grupos de segurança de menor privilégio, um script shell para criação em massa e uma política que exige MFA em todas as contas.',
+        content: `![](https://cdn-images-1.medium.com/max/1024/1*ektoEQZJZOgIRACxpoxodg.png)
+
+Nesse projeto baseado em um cenário real, tive que atuar como Especialista Cloud para realizar a migração de usuários de forma automatizada e gerenciar os recursos do IAM (Identity and Access Management) da AWS.
+
+Haviam 100 usuários que precisaram ser migrados e ter o MFA — Autenticação por múltiplos fatores (Multi-factor Authentication) habilitado nas contas, pois esta é uma melhor prática de segurança.
+
+Para não ser uma tarefa repetitiva e manual na console da AWS, precisei ter o pensamento voltado a automatizar os processos.
+
+![](https://cdn-images-1.medium.com/max/1024/1*LMZyP9rylkfmos3twRAq8g.png)
+
+O primeiro passo foi criar grupos de segurança (RedesAdmin, LinuxAdmin, CloudAdmin, DBA e Estagiários) no IAM, seguindo o conceito de acesso com o mínimo de privilégios recomendado pela AWS. Por exemplo, o grupo de DBA possui políticas de permissão como *AmazonRDSDataFullAccess*.
+
+![](https://cdn-images-1.medium.com/max/596/1*QpKCNDtZuRnn9QbjlS4EtQ.png)
+
+Com os grupos de seguranças criados, preparando o ambiente na CloudShell para executar script instalando o dos2unix.
+
+\`\`\`bash
+$ sudo yum install dos2unix -y
+\`\`\`
+
+Esse pacote é importante para executar o script, pois ele realiza a conversão de arquivos do Windows para Unix. Como os dados dos usuários estão em um arquivo .csv, essa conversão é necessária. Após a instalação, o script Shell foi criado e o arquivo csv foi movido para o CloudShell.
+
+\`\`\`bash
+#!/bin/bash
+# Proposito: Automatiza a criação de usuários na AWS
+# Utilizacao: ./aws-iam-cria-usuario.sh <formato arquivo entrada .csv>
+# Formato do arquivo de entrada: usuarios,grupo,senha
+# Autor: Jean Rodrigues
+# ------------------------------------------
+
+INPUT=$1
+OLDIFS=$IFS
+IFS=',;'
+
+[ ! -f $INPUT ] && { echo "$INPUT arquivo nao encontrado"; exit 99; }
+
+command -v dos2unix >/dev/null || { echo "utilitario dos2unix nao encontrado. Por favor, instale dos2unix antes de rodar o script."; exit 1; }
+
+dos2unix $INPUT
+
+while read -r usuario grupo senha || [ -n "$usuario" ]
+do
+    if [ "$usuario" != "usuarios" ]; then
+	    aws iam create-user --user-name $usuario
+        aws iam create-login-profile --password-reset-required --user-name $usuario --password $senha
+        aws iam add-user-to-group --group-name $grupo --user-name $usuario
+	fi
+
+done < $INPUT
+
+IFS=$OLDIFS
+\`\`\`
+
+\`\`\`bash
+$ chmod +x aws-iam-cria-usuario.sh
+\`\`\`
+
+Importante o script ter a permissão de execução.
+
+\`\`\`bash
+$ ./aws-iam-cria-usuario.sh listaUsuarios.csv
+\`\`\`
+
+Após a execução do script o usuários serão criados.
+
+![](https://cdn-images-1.medium.com/max/246/1*Zdgrq498z4bsNvIhrdL6ng.png)
+
+Para aumentar a segurança das contas, é fundamental habilitar a Autenticação de Múltiplos Fatores (Multi-factor Authentication) por meio da criação de uma política específica e anexar essa política a todos os grupos de segurança criado.
+
+\`\`\`json
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AllowViewAccountInfo",
+            "Effect": "Allow",
+            "Action": "iam:ListVirtualMFADevices",
+            "Resource": "*"
+        },
+        {
+            "Sid": "AllowManageOwnVirtualMFADevice",
+            "Effect": "Allow",
+            "Action": [
+                "iam:CreateVirtualMFADevice",
+                "iam:DeleteVirtualMFADevice"
+            ],
+            "Resource": "arn:aws:iam::*:mfa/\${aws:username}"
+        },
+        {
+            "Sid": "AllowManageOwnUserMFA",
+            "Effect": "Allow",
+            "Action": [
+                "iam:DeactivateMFADevice",
+                "iam:EnableMFADevice",
+                "iam:GetUser",
+                "iam:ListMFADevices",
+                "iam:ResyncMFADevice"
+            ],
+            "Resource": "arn:aws:iam::*:user/\${aws:username}"
+        },
+        {
+            "Sid": "DenyAllExceptListedIfNoMFA",
+            "Effect": "Deny",
+            "NotAction": [
+                "iam:ListUsers",
+                "iam:CreateVirtualMFADevice",
+                "iam:EnableMFADevice",
+                "iam:GetUser",
+                "iam:ListMFADevices",
+                "iam:ListVirtualMFADevices",
+                "iam:ResyncMFADevice",
+                "iam:ChangePassword",
+                "iam:CreateUser",
+                "iam:CreateLoginProfile",
+                "iam:AddUserToGroup",
+                "sts:GetSessionToken"
+            ],
+            "Resource": "*",
+            "Condition": {
+                "BoolIfExists": {
+                    "aws:MultiFactorAuthPresent": "false"
+                }
+            }
+        }
+    ]
+}
+\`\`\`
+
+Dessa forma é possível criar uma grande quantidade de usuários de forma automatizada e aplicando com obrigatoriedade o uso do MFA para melhor segurança das contas.
+`,
+    },
 ];
 
 export function getSortedArticles() {
