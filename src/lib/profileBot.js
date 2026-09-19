@@ -6,7 +6,7 @@
  *
  * INTEGRATION SEAM:
  * When a real backend / LLM endpoint is available, set REACT_APP_PROFILE_BOT_URL
- * (e.g. in .env) to a URL that accepts `POST { question, language }` and returns
+ * (e.g. in .env) to a URL that accepts `POST { message, language }` and returns
  * `{ answer: string }`. `askProfileBot` will use it automatically and fall back
  * to the local knowledge base on any error.
  */
@@ -211,7 +211,7 @@ export async function askProfileBot(question, language = 'pt') {
             const res = await fetch(ENDPOINT, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ question, language }),
+                body: JSON.stringify({ message: question, language }),
             });
             if (res.ok) {
                 const data = await res.json();
