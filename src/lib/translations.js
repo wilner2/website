@@ -134,14 +134,13 @@ export const translations = {
         },
         chatbot: {
             title: "Pergunte sobre meu perfil",
-            beta: "Beta · em desenvolvimento",
             placeholder: "Digite sua pergunta...",
             send: "Enviar",
             open: "Abrir chat",
             close: "Fechar chat",
-            greeting: "Olá! Sou um assistente em desenvolvimento. Posso responder perguntas sobre a experiência, stack e formação do Wilner. O que você gostaria de saber?",
+            greeting: "Olá! Sou o assistente virtual do Wilner. Posso responder perguntas sobre a experiência, stack e formação do Wilner. O que você gostaria de saber?",
             fallback: "Ainda estou aprendendo e não encontrei uma resposta para isso. Tente perguntar sobre experiência, tecnologias, certificações, contato ou formação.",
-            disclaimer: "Respostas geradas localmente a partir do currículo. Integração com IA em breve."
+            disclaimer: "Respostas geradas por IA a partir do currículo do Wilner; podem conter imprecisões."
         },
         contact: {
             title: "Entre em Contato",
@@ -301,14 +300,13 @@ export const translations = {
         },
         chatbot: {
             title: "Ask about my profile",
-            beta: "Beta · in development",
             placeholder: "Type your question...",
             send: "Send",
             open: "Open chat",
             close: "Close chat",
-            greeting: "Hi! I'm an assistant in development. I can answer questions about Wilner's experience, stack, and education. What would you like to know?",
+            greeting: "Hi! I'm Wilner's virtual assistant. I can answer questions about Wilner's experience, stack, and education. What would you like to know?",
             fallback: "I'm still learning and couldn't find an answer for that. Try asking about experience, technologies, certifications, contact, or education.",
-            disclaimer: "Answers generated locally from the resume. AI integration coming soon."
+            disclaimer: "AI-generated answers based on Wilner's resume; may contain inaccuracies."
         },
         contact: {
             title: "Contact Me",

@@ -64,9 +64,6 @@ const Chatbot = () => {
           <div className="border-b border-border/60 bg-secondary/40 px-4 py-3">
             <div className="flex items-center justify-between">
               <h3 className="text-sm font-bold text-foreground">{chatbot.title}</h3>
-              <span className="rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-primary">
-                {chatbot.beta}
-              </span>
             </div>
           </div>
 
